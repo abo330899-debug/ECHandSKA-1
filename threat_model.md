@@ -47,7 +47,7 @@ The browser is untrusted and can alter route state, requests, and asset URLs. Au
 
 ### Information Disclosure
 
-Protected memories must not be exposed through public frontend bundles, logs, error responses, or cache policy. Sensitive text, media inventories, and intimate captions should only be delivered after successful authorization, and every protected response, including `/api/private/content`, must use cache directives that prevent later recovery from browser caches on shared devices.
+Protected memories must not be exposed through public frontend bundles, logs, error responses, or cache policy. Sensitive text, media inventories, and intimate captions should only be delivered after successful authorization, and every protected response, including `/api/private/content`, must use cache directives that prevent later recovery from browser caches on shared devices. Because the SPA keeps protected data in in-memory client state, protected views and module-scoped caches must also be cleared promptly when authorization is lost rather than remaining visible until an asynchronous route check finishes.
 
 ### Denial of Service
 
