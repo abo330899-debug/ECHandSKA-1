@@ -2622,7 +2622,7 @@ audio,video{filter:saturate(.95)}
   --font-ar:"IBM Plex Sans Arabic","Vazirmatn","Noto Naskh Arabic","Cairo","Inter",system-ui,sans-serif;
   --font-fa:"Vazirmatn","IBM Plex Sans Arabic","Noto Naskh Arabic","Inter",system-ui,sans-serif;
   --font-latin:"Inter","Manrope","IBM Plex Sans Arabic",system-ui,sans-serif;
-  --font-display-ar:"Noto Naskh Arabic","IBM Plex Sans Arabic","Vazirmatn",serif;
+  --font-display-ar:"Tajawal","Noto Naskh Arabic","IBM Plex Sans Arabic","Vazirmatn",sans-serif;
   --font-display-latin:"Manrope","Inter","IBM Plex Sans Arabic",system-ui,sans-serif;
 }
 
@@ -3067,4 +3067,94 @@ section + section{margin-top:0}
   }
   .photos-luxe .photo-card,
   .videos-luxe .v-card{border-radius:20px}
+}
+
+/* ============================================================
+   PREMIUM CINEMATIC POLISH v3 — refined glass + interactions
+   ============================================================ */
+
+/* Cards — translucent glass at ~5% with hairline rose-gold border */
+.glass,
+.cards-grid .card,
+.timeline-card,
+.photos-luxe .photo-card,
+.videos-luxe .v-card{
+  background:rgba(255,255,255,.045);
+  backdrop-filter:blur(20px) saturate(1.1);
+  -webkit-backdrop-filter:blur(20px) saturate(1.1);
+  border:0.5px solid #d8a57c33;
+  border-radius:28px;
+  transition:transform .35s cubic-bezier(.2,.7,.2,1),
+             box-shadow .35s cubic-bezier(.2,.7,.2,1),
+             border-color .35s ease;
+}
+.cards-grid .card:hover,
+.timeline-card:hover,
+.photos-luxe .photo-card:hover,
+.videos-luxe .v-card:hover{
+  transform:translateY(-5px);
+  border-color:rgba(216,165,124,.45);
+  box-shadow:0 24px 60px rgba(0,0,0,.55), 0 0 36px rgba(216,165,124,.18);
+}
+
+/* Photos — image overlay fades on hover */
+.photos-luxe .photo-card-media{position:relative}
+.photos-luxe .photo-card-media::after{
+  content:"";
+  position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(5,8,20,.25) 0%, rgba(5,8,20,.45) 100%);
+  pointer-events:none;
+  transition:opacity .4s ease;
+  opacity:1;
+  z-index:1;
+}
+.photos-luxe .photo-card:hover .photo-card-media::after{opacity:.15}
+.photos-luxe .photo-card-overlay{z-index:2}
+.photos-luxe .photo-card-badge{z-index:3}
+
+/* Videos — modal cinematic backdrop */
+.videos-luxe .v-modal{
+  background:rgba(3,5,12,.86);
+  backdrop-filter:blur(24px) saturate(1.1);
+  -webkit-backdrop-filter:blur(24px) saturate(1.1);
+}
+.videos-luxe .v-modal-box{
+  border:0.5px solid #d8a57c33;
+  border-radius:28px;
+}
+
+/* Photos lightbox — same cinematic backdrop */
+.photos-luxe .lightbox-overlay{
+  background:rgba(3,5,12,.86);
+  backdrop-filter:blur(24px) saturate(1.1);
+  -webkit-backdrop-filter:blur(24px) saturate(1.1);
+}
+.photos-luxe .lightbox-content{
+  border:0.5px solid #d8a57c33;
+  border-radius:28px;
+}
+
+/* Body line-height — leading-relaxed */
+body{line-height:1.75}
+html[lang="ar"] body,html[lang="fa"] body{line-height:1.85}
+
+/* Headings get Tajawal weight for ar by default via --font-display-ar */
+html[lang="ar"] h1,html[lang="ar"] h2,
+html[lang="ar"] .hero-title,html[lang="ar"] .page-header h1{
+  font-weight:700;
+  letter-spacing:0;
+}
+
+/* Smoother global transitions */
+a,button,.btn,.links a{
+  transition:color .25s ease, background .25s ease, border-color .25s ease,
+             box-shadow .25s ease, transform .25s ease;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .cards-grid .card,.timeline-card,
+  .photos-luxe .photo-card,.videos-luxe .v-card,
+  .photos-luxe .photo-card-media::after{
+    transition:none!important;
+  }
 }
