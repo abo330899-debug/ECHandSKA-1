@@ -3,6 +3,8 @@ import { Link } from "wouter";
 import { type Translations, type Lang } from "@/i18n/translations";
 import TypedText from "@/components/TypedText";
 import TypewriterTitle from "@/components/TypewriterTitle";
+import FarewellPassage from "@/components/FarewellPassage";
+import OblivionScript from "@/components/OblivionScript";
 import Footer from "@/components/Footer";
 import usePageAudio from "@/hooks/usePageAudio";
 import { usePrivateContent, pickLangPages } from "@/hooks/usePrivateContent";
@@ -77,12 +79,18 @@ export default function Home({ t, lang }: Props) {
           <span className="eyebrow">{t.hero_eyebrow}</span>
           <TypewriterTitle text={t.hero_title} />
 
-          <TypedText phrases={typedPhrases} />
-          {p.hero_text && <p className="hero-text">{p.hero_text}</p>}
-          {quotes.length > 0 && (
-            <div className="quote-rotator" key={quoteIdx}>
-              <q>{quotes[quoteIdx]}</q>
-            </div>
+          {lang === "ar" ? (
+            <FarewellPassage />
+          ) : (
+            <>
+              <TypedText phrases={typedPhrases} />
+              {p.hero_text && <p className="hero-text">{p.hero_text}</p>}
+              {quotes.length > 0 && (
+                <div className="quote-rotator" key={quoteIdx}>
+                  <q>{quotes[quoteIdx]}</q>
+                </div>
+              )}
+            </>
           )}
           <div className="elapsed-counter">
             <span>{el.days} {t.countdown_day}</span>
@@ -100,6 +108,8 @@ export default function Home({ t, lang }: Props) {
           </div>
         </div>
       </section>
+
+      {lang === "ar" && <OblivionScript />}
 
       <section className="cards-section">
         <div className="cards-grid">

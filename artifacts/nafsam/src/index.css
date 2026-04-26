@@ -3934,3 +3934,235 @@ html.is-idle::after{
     animation:none;
   }
 }
+
+/* ============================================================
+   FAREWELL PASSAGE — رسالة الكرامة والوداع (Hero)
+   ============================================================ */
+.farewell-passage{
+  font-family:'Tajawal','Cairo','Noto Naskh Arabic',serif;
+  font-size:clamp(.98rem, 1.6vw, 1.18rem);
+  line-height:2;
+  color:#ece4d6;
+  letter-spacing:.005em;
+  max-width:720px;
+  margin:1.6rem auto 1.2rem;
+  text-align:center;
+  text-shadow:0 1px 24px rgba(0,0,0,.55);
+  font-weight:400;
+  white-space:pre-wrap;
+  position:relative;
+  min-height:7em;
+}
+.farewell-passage .fp-text{
+  display:inline;
+  background:linear-gradient(180deg, #fff8ec 0%, #ece4d6 50%, #d8cdb8 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:transparent;
+}
+.farewell-passage .fp-caret{
+  display:inline-block;
+  width:.06em;
+  min-width:2px;
+  height:1.05em;
+  background:linear-gradient(180deg, #f3c89e, #d8a57c);
+  border-radius:2px;
+  margin-inline-start:.08em;
+  vertical-align:-.18em;
+  box-shadow:0 0 10px rgba(216,165,124,.5);
+  animation:tw-blink 1.05s steps(1) infinite;
+  opacity:.85;
+}
+.farewell-passage.is-done .fp-caret{
+  animation:tw-blink-soft 1.6s ease-in-out infinite;
+  opacity:.4;
+}
+@media (max-width:520px){
+  .farewell-passage{ font-size:1rem; line-height:1.95; padding-inline:6px; }
+}
+
+/* ============================================================
+   OBLIVION SCRIPT — برمجية المحو النهائي
+   ============================================================ */
+.oblivion{
+  position:relative;
+  margin:2.5rem auto 3rem;
+  padding:clamp(2rem, 6vw, 4.5rem) 1.5rem;
+  max-width:920px;
+  border-radius:28px;
+  background:
+    radial-gradient(ellipse at center top, rgba(216,165,124,.06), transparent 70%),
+    linear-gradient(180deg, rgba(8,12,28,.55), rgba(5,8,20,.75));
+  border:1px solid rgba(216,165,124,.18);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.025) inset,
+    0 30px 70px -30px rgba(0,0,0,.85),
+    0 0 80px rgba(216,165,124,.06);
+  overflow:hidden;
+  isolation:isolate;
+}
+.oblivion::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  border-radius:inherit;
+  background:linear-gradient(135deg,
+    transparent 0%,
+    rgba(216,165,124,.18) 50%,
+    transparent 100%);
+  opacity:.6;
+  pointer-events:none;
+  z-index:-1;
+  mask:linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+  -webkit-mask:linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+  mask-composite:exclude;
+  -webkit-mask-composite:xor;
+  padding:1px;
+}
+
+.oblivion-inner{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:1.4rem;
+  text-align:center;
+  position:relative;
+  min-height:clamp(220px, 38vw, 360px);
+}
+
+.oblivion-counter{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:74px;
+  height:74px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(216,165,124,.15), rgba(5,8,20,.4) 70%);
+  border:1px solid rgba(216,165,124,.45);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.04) inset,
+    0 0 30px rgba(216,165,124,.18),
+    0 8px 24px rgba(0,0,0,.5);
+  font-family:'Inter','Manrope',sans-serif;
+  font-weight:300;
+  font-size:2rem;
+  color:#f3c89e;
+  letter-spacing:-.02em;
+  text-shadow:0 0 14px rgba(216,165,124,.35);
+  animation:counter-pulse 1s ease-in-out infinite;
+}
+@keyframes counter-pulse{
+  0%,100%{ transform:scale(1); box-shadow:0 0 0 1px rgba(255,255,255,.04) inset, 0 0 30px rgba(216,165,124,.18), 0 8px 24px rgba(0,0,0,.5); }
+  50%   { transform:scale(1.05); box-shadow:0 0 0 1px rgba(255,255,255,.06) inset, 0 0 44px rgba(216,165,124,.32), 0 8px 26px rgba(0,0,0,.5); }
+}
+.oblivion-counter .oc-num{
+  display:inline-block;
+  animation:counter-tick .35s cubic-bezier(.22, 1, .36, 1);
+}
+@keyframes counter-tick{
+  0%{ transform:scale(.7); opacity:0; filter:blur(6px); }
+  100%{ transform:scale(1); opacity:1; filter:blur(0); }
+}
+
+.oblivion-name{
+  font-family:'Cormorant Garamond','Playfair Display','Tajawal',serif;
+  font-size:clamp(4.5rem, 14vw, 9rem);
+  line-height:1;
+  margin:0;
+  letter-spacing:.02em;
+  font-weight:500;
+  background:linear-gradient(180deg, #fff8ec 0%, #f3c89e 45%, #d8a57c 80%, #a87a4a 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:transparent;
+  text-shadow:0 0 60px rgba(216,165,124,.35);
+  filter:drop-shadow(0 0 30px rgba(216,165,124,.18));
+  transition:
+    filter 2.2s cubic-bezier(.4, 0, .2, 1),
+    transform 2.4s cubic-bezier(.4, 0, .2, 1),
+    opacity 2.2s cubic-bezier(.4, 0, .2, 1);
+  will-change:filter, transform, opacity;
+}
+.oblivion-hint{
+  margin:0;
+  font-family:'Tajawal','Cairo',sans-serif;
+  font-size:.92rem;
+  letter-spacing:.04em;
+  color:rgba(236, 228, 214, .55);
+  font-weight:300;
+}
+
+.oblivion--blurring .oblivion-name{
+  filter:blur(60px) drop-shadow(0 0 80px rgba(216,165,124,.4));
+  transform:scale(1.18);
+  opacity:0;
+}
+.oblivion--blurring .oblivion-counter,
+.oblivion--blurring .oblivion-hint{
+  opacity:0;
+  transition:opacity 1.2s ease-out;
+}
+
+.oblivion-revealed{
+  font-family:'Tajawal','Cairo','Cormorant Garamond',serif;
+  font-size:clamp(1.4rem, 3.6vw, 2.4rem);
+  line-height:1.55;
+  font-weight:600;
+  letter-spacing:.01em;
+  max-width:760px;
+  margin:0 auto;
+  animation:revealed-rise 2s cubic-bezier(.22, 1, .36, 1) both;
+}
+.oblivion-revealed .or-text{
+  background:linear-gradient(
+    100deg,
+    #d8a57c 0%,
+    #f3c89e 30%,
+    #fff8ec 50%,
+    #f3c89e 70%,
+    #d8a57c 100%
+  );
+  background-size:280% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:transparent;
+  filter:drop-shadow(0 0 24px rgba(243,200,158,.35));
+  animation:gold-shimmer 4.5s ease-in-out infinite;
+}
+@keyframes revealed-rise{
+  0%{
+    opacity:0;
+    transform:translateY(18px) scale(.96);
+    filter:blur(14px);
+  }
+  100%{
+    opacity:1;
+    transform:translateY(0) scale(1);
+    filter:blur(0);
+  }
+}
+@keyframes gold-shimmer{
+  0%, 100%{ background-position:0% 50%; }
+  50%{ background-position:100% 50%; }
+}
+
+.oblivion--revealed .oblivion-inner{
+  min-height:clamp(140px, 22vw, 220px);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .oblivion-counter,
+  .oblivion-counter .oc-num,
+  .oblivion-name,
+  .oblivion-revealed,
+  .oblivion-revealed .or-text{
+    animation:none !important;
+    transition:none !important;
+  }
+}
