@@ -100,7 +100,7 @@ export default function Videos({ t }: Props) {
               <div className="v-date">
                 {t.video_memory_label} {index + 1}
               </div>
-              <div className="v-title">{item.title}</div>
+              <div className="v-title">{item.caption}</div>
               <div className="v-quote">{item.quote}</div>
             </div>
           </article>
@@ -122,7 +122,7 @@ export default function Videos({ t }: Props) {
                 <div className="v-modal-date">
                   {t.video_memory_label} {(activeIndex ?? 0) + 1}
                 </div>
-                <div className="v-modal-title">{active.title}</div>
+                <div className="v-modal-title">{active.caption}</div>
               </div>
               <button
                 type="button"
