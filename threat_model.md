@@ -15,6 +15,7 @@ Production assumptions for future scans:
 - **Private memory content** -- photos, videos, audio, writings, captions, quotes, and related metadata associated with the archive. Exposure would disclose intimate personal material to unauthorized viewers.
 - **Authentication material and session state** -- accepted riddle answers, session cookies, and the session-signing secret. Compromise would allow unauthorized access to the protected archive.
 - **Application and deployment secrets** -- environment variables such as `NAFSAM_SESSION_SECRET`, `DATABASE_URL`, and any future third-party API credentials.
+- **Deployment configuration** -- checked-in configuration files and artifact metadata that influence production environment variables or startup behavior. These files must not contain the actual archive answers or other secret values.
 - **Archive privacy expectations** -- the expectation that protected pages, media, and JSON metadata are only available after successful server-side authorization and are not retained in public bundles or browser caches longer than intended.
 - **Archive availability** -- the intended viewers' ability to complete the login flow and reach protected content without being trivially locked out by unauthenticated attackers.
 
@@ -31,6 +32,7 @@ Production assumptions for future scans:
 
 - **Production entry points**: `artifacts/api-server/src/index.ts`, `artifacts/api-server/src/app.ts`, `artifacts/api-server/src/routes/auth.ts`, `artifacts/api-server/src/routes/private.ts`, `artifacts/nafsam/src/App.tsx`
 - **Highest-risk code areas**: `artifacts/api-server/src/lib/session.ts`, `artifacts/api-server/src/routes/auth.ts`, `artifacts/api-server/src/routes/private.ts`, `artifacts/nafsam/src/i18n/translations.ts`, `artifacts/nafsam/src/hooks/usePrivateContent.ts`, `artifacts/nafsam/src/lib/auth.ts`, `artifacts/nafsam/src/pages/Login.tsx`, `artifacts/nafsam/src/pages/Songs.tsx`, `artifacts/nafsam/dist/public/assets/`
+- **Sensitive configuration anchors**: `.replit`, `artifacts/*/.replit-artifact/artifact.toml`, and deployment environment-variable configuration should be treated as production-relevant when they set authentication or startup behavior.
 - **Public surfaces**: the frontend bundle and static assets under `artifacts/nafsam/dist/public`, including generated JS chunks that any visitor can download, plus `/api/healthz` and `/api/auth/*`
 - **Intended authenticated surfaces**: `/api/private/*` and frontend routes such as `/home`, `/moments`, `/photos`, `/songs`, `/videos`, and `/writings`
 - **Dev-only areas to usually ignore**: `artifacts/mockup-sandbox/`, `scripts/`, `lib/api-spec/`
@@ -39,7 +41,7 @@ Production assumptions for future scans:
 
 ### Spoofing
 
-The server must fail closed if production authentication configuration is incomplete. Accepted login answers must come from deployment configuration rather than hardcoded fallbacks, and the application must not expose exact accepted answers or answer identifiers to unauthenticated visitors, including in public bootstrap endpoints such as `/api/auth/session`. Session cookies must remain signed with a production-only secret and validated on every protected request. Changing the archive answer or performing an access-revocation action must also provide a way to invalidate already-issued sessions rather than leaving old cookies valid for their full TTL.
+The server must fail closed if production authentication configuration is incomplete. Accepted login answers must come from deployment secret storage rather than hardcoded fallbacks or tracked configuration files, and the application must not expose exact accepted answers or answer identifiers to unauthenticated visitors, including in public bootstrap endpoints such as `/api/auth/session`. Session cookies must remain signed with a production-only secret and validated on every protected request. Changing the archive answer or performing an access-revocation action must also provide a way to invalidate already-issued sessions rather than leaving old cookies valid for their full TTL.
 
 ### Tampering
 
