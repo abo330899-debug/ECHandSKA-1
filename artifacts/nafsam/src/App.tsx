@@ -7,7 +7,6 @@ import DustParticles from "@/components/DustParticles";
 import { useMagneticButtons } from "@/hooks/useMagneticButtons";
 import { useIdleVignette } from "@/hooks/useIdleVignette";
 import Navbar from "@/components/Navbar";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
 import Login from "@/pages/Login";
 import { fetchSession } from "@/lib/auth";
 import { clearPrivateContentCache } from "@/hooks/usePrivateContent";
@@ -28,7 +27,7 @@ function ProtectedRoute({ state, children }: { state: AuthState; children: React
 }
 
 function AppContent() {
-  const { lang, setLang, t } = useLang();
+  const { lang, t } = useLang();
   const [authState, setAuthState] = useState<AuthState>("checking");
   const [location] = useLocation();
   useMagneticButtons();
@@ -73,7 +72,6 @@ function AppContent() {
       <FloatingHearts />
       <DustParticles />
       {authState === "authed" && <Navbar t={t} />}
-      <LanguageSwitcher lang={lang} setLang={setLang} mini />
       <main>
         <Switch>
           <Route path="/">

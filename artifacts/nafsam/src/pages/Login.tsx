@@ -119,7 +119,7 @@ export default function Login({ t, lang, onAuth }: Props) {
                 <div key={`card-${i}`} className="user-card glass">
                   <div className="riddle-hint">
                     <span className="riddle-icon">🔓</span>
-                    <p>{card.hints[lang] ?? card.hints.en}</p>
+                    <p>{card.hints[lang] ?? card.hints.tr ?? card.hints.en}</p>
                   </div>
                 </div>
               ))

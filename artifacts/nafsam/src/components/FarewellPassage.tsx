@@ -49,8 +49,8 @@ export default function FarewellPassage({
   paragraphs,
   silverAnchor,
   memoryPattern,
-  dir = "rtl",
-  lang = "ar",
+  dir = "ltr",
+  lang = "tr",
 }: Props) {
   const TITLE = title;
   const BODY = useMemo(() => paragraphs.join("\n\n"), [paragraphs]);

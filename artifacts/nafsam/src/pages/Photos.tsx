@@ -86,8 +86,8 @@ export default function Photos({ t, lang }: Props) {
     prefetchImages(all);
   }, [data]);
 
-  const langKey: "ar" | "tr" = lang === "ar" ? "ar" : "tr";
-  const captions = data?.captions?.[langKey] ?? [];
+  void lang;
+  const captions = data?.captions?.tr ?? [];
   const allPhotos = data?.photos ?? [];
 
   const rawSpecialPhotos = data?.specialPhotos ?? [];
@@ -240,7 +240,7 @@ export default function Photos({ t, lang }: Props) {
               e.stopPropagation();
               setLightbox(null);
             }}
-            aria-label="Close"
+            aria-label="Kapat"
           >
             &times;
           </button>

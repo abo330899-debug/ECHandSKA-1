@@ -17,8 +17,8 @@ export default function OblivionScript({
   name,
   hint,
   revealed,
-  dir = "rtl",
-  lang = "ar",
+  dir = "ltr",
+  lang = "tr",
 }: Props) {
   const [phase, setPhase] = useState<Phase>(() => {
     if (typeof window === "undefined") return "countdown";

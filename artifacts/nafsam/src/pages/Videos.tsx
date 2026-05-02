@@ -224,7 +224,7 @@ export default function Videos({ t, lang }: Props) {
   const data = usePrivateContent();
   const p = pickLangPages(data, lang);
   const videosData = data?.videos ?? [];
-  const isRTL = lang === "ar" || lang === "fa";
+  void lang;
 
   const openModal = useCallback((index: number) => {
     setActiveIndex(index);
@@ -287,8 +287,8 @@ export default function Videos({ t, lang }: Props) {
     const focusTimer = window.setTimeout(() => closeBtnRef.current?.focus(), 30);
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeModal();
-      else if (e.key === "ArrowLeft") (isRTL ? nextVideo : prevVideo)();
-      else if (e.key === "ArrowRight") (isRTL ? prevVideo : nextVideo)();
+      else if (e.key === "ArrowLeft") prevVideo();
+      else if (e.key === "ArrowRight") nextVideo();
     };
     window.addEventListener("keydown", onKey);
     return () => {
@@ -297,20 +297,20 @@ export default function Videos({ t, lang }: Props) {
       window.removeEventListener("keydown", onKey);
       lastFocusedRef.current?.focus?.();
     };
-  }, [activeIndex, closeModal, prevVideo, nextVideo, isRTL]);
+  }, [activeIndex, closeModal, prevVideo, nextVideo]);
 
   const active = activeIndex !== null ? videosData[activeIndex] ?? null : null;
   const activeKind: VideoKind = active ? detectKind(active.file) : "mp4";
 
   return (
     <div className="videos-page videos-luxe">
-      <section className="v-hero" dir={isRTL ? "rtl" : "ltr"}>
+      <section className="v-hero" dir="ltr">
         <h1 className="v-hero-title">{t.videos_title}</h1>
         {p.videos_text && <p className="v-hero-sub">{p.videos_text}</p>}
         <div className="v-hero-line" />
       </section>
 
-      <section className="v-stats" dir={isRTL ? "rtl" : "ltr"}>
+      <section className="v-stats" dir="ltr">
         <div className="v-stat">
           <div className="v-stat-label">{t.video_memory_label}</div>
           <div className="v-stat-value">{videosData.length}</div>
@@ -375,17 +375,17 @@ export default function Videos({ t, lang }: Props) {
                 type="button"
                 className="v-side-nav v-side-nav-prev"
                 onClick={prevVideo}
-                aria-label={isRTL ? "السابق" : "Previous"}
+                aria-label="Önceki"
               >
-                {isRTL ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                <ChevronLeftIcon />
               </button>
               <button
                 type="button"
                 className="v-side-nav v-side-nav-next"
                 onClick={nextVideo}
-                aria-label={isRTL ? "التالي" : "Next"}
+                aria-label="Sonraki"
               >
-                {isRTL ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                <ChevronRightIcon />
               </button>
             </>
           )}
@@ -396,7 +396,7 @@ export default function Videos({ t, lang }: Props) {
               type="button"
               className="v-close-btn"
               onClick={closeModal}
-              aria-label={isRTL ? "إغلاق" : "Close"}
+              aria-label="Kapat"
             >
               <CloseIcon />
             </button>
@@ -430,9 +430,7 @@ export default function Videos({ t, lang }: Props) {
                     <PlayIcon />
                   </div>
                   <p className="v-modal-mega-text">
-                    {isRTL
-                      ? "هذا الفيديو محفوظ في MEGA. اضغط لفتحه في تبويب جديد."
-                      : "This video is hosted on MEGA. Open it in a new tab."}
+                    Bu video MEGA üzerinde tutuluyor. Yeni sekmede açmak için tıkla.
                   </p>
                   <a
                     className="v-btn v-btn-accent v-btn-cta"
@@ -440,7 +438,7 @@ export default function Videos({ t, lang }: Props) {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {isRTL ? "فتح الفيديو" : "Open video"}
+                    Videoyu Aç
                   </a>
                 </div>
               )}
@@ -459,15 +457,7 @@ export default function Videos({ t, lang }: Props) {
                       type="button"
                       className="v-btn v-btn-icon"
                       onClick={toggleTheater}
-                      aria-label={
-                        theaterMode
-                          ? isRTL
-                            ? "وضع مدمج"
-                            : "Compact mode"
-                          : isRTL
-                            ? "وضع موسّع"
-                            : "Theater mode"
-                      }
+                      aria-label={theaterMode ? "Kompakt mod" : "Geniş mod"}
                       aria-pressed={theaterMode}
                     >
                       {theaterMode ? <CompressIcon /> : <ExpandIcon />}
@@ -476,7 +466,7 @@ export default function Videos({ t, lang }: Props) {
                       type="button"
                       className="v-btn v-btn-icon"
                       onClick={toggleFullscreen}
-                      aria-label={isRTL ? "ملء الشاشة" : "Fullscreen"}
+                      aria-label="Tam ekran"
                     >
                       <ExpandIcon />
                     </button>
@@ -487,7 +477,7 @@ export default function Videos({ t, lang }: Props) {
                   className="v-btn v-btn-ghost"
                   onClick={closeModal}
                 >
-                  {isRTL ? "إغلاق" : "Close"}
+                  Kapat
                 </button>
               </div>
             </div>

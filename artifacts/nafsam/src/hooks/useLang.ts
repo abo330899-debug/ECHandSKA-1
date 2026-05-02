@@ -1,33 +1,23 @@
-import { useState, useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import { type Lang, translations } from "@/i18n/translations";
 
 export function useLang() {
-  const [lang, setLangState] = useState<Lang>(() => {
-    try {
-      const stored = localStorage.getItem("site_lang");
-      if (stored === "tr" || stored === "fa" || stored === "ar" || stored === "en") return stored;
-    } catch {
-      /* storage blocked */
-    }
-    return "tr";
-  });
-
-  const setLang = useCallback((l: Lang) => {
-    try {
-      localStorage.setItem("site_lang", l);
-    } catch {
-      /* storage blocked */
-    }
-    setLangState(l);
-  }, []);
+  const lang: Lang = "tr";
+  const t = translations[lang];
 
   useEffect(() => {
-    const t = translations[lang];
     document.documentElement.lang = lang;
     document.documentElement.dir = t.dir;
-  }, [lang]);
+    try {
+      localStorage.setItem("site_lang", lang);
+    } catch {
+      /* storage blocked */
+    }
+  }, [lang, t.dir]);
 
-  const t = translations[lang];
+  const setLang = (_l: Lang) => {
+    /* single-language site */
+  };
 
   return { lang, setLang, t };
 }
