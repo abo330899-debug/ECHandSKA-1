@@ -17,6 +17,7 @@ const Photos = lazy(() => import("@/pages/Photos"));
 const Songs = lazy(() => import("@/pages/Songs"));
 const Videos = lazy(() => import("@/pages/Videos"));
 const Writings = lazy(() => import("@/pages/Writings"));
+const Feelings = lazy(() => import("@/pages/Feelings"));
 
 type AuthState = "checking" | "authed" | "anon";
 
@@ -94,6 +95,9 @@ function AppContent() {
           </Route>
           <Route path="/writings">
             <ProtectedRoute state={authState}><Writings t={t} lang={lang} /></ProtectedRoute>
+          </Route>
+          <Route path="/feelings">
+            <ProtectedRoute state={authState}><Feelings t={t} /></ProtectedRoute>
           </Route>
           <Route>
             <Redirect to="/" />

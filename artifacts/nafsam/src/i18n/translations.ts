@@ -12,6 +12,7 @@ export interface Translations {
   nav_songs: string;
   nav_videos: string;
   nav_writings: string;
+  nav_feelings: string;
   login_title: string;
   login_text: string;
   login_input: string;
@@ -63,6 +64,7 @@ export const translations: Record<Lang, Translations> = {
     nav_songs: "Gece Şarkıları",
     nav_videos: "Videolar",
     nav_writings: "Boğulma",
+    nav_feelings: "Hisler Öldüğünde",
     login_title: "Nafsam",
     login_text: "Bu yer geri sayım tamamlanana kadar kapalı kalır. Her isim kendi vaktini bekler. Sonunda artık sayaç kalmaz... sadece sözler kalır.",
     login_input: "Cevabı yaz",
