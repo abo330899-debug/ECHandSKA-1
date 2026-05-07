@@ -69,6 +69,83 @@ interface SpecialPhotoItem {
   featured?: boolean;
 }
 
+interface MemoryFragment {
+  label: string;
+  body: string;
+}
+
+interface FeelingsContent {
+  memoryFragments: MemoryFragment[];
+  collapseLines: string[];
+  heroSub: string;
+  storyTitle: string;
+  storyParagraphs: string[];
+  memoriesTitle: string;
+  memoriesSub: string;
+  collapseTitle: string;
+  endingLine: string;
+}
+
+interface PageAudioMap {
+  home?: string;
+  moments?: string;
+  photos?: string;
+  writings?: string;
+}
+
+interface MediaConfig {
+  heroImageUrl: string;
+  photosDir: string;
+}
+
+function getDefaultFeelings(): FeelingsContent {
+  return {
+    memoryFragments: [
+      { label: "I", body: "Bir gülüşün vardı… şimdi onu hatırladığımda içimde bir şey kapanıyor, bir kapı gibi, sessizce." },
+      { label: "II", body: "Sesini hâlâ duyabiliyorum, ama artık beni çağırmıyor. Sadece içimde bir oda boşaltıyor." },
+      { label: "III", body: "Bazı geceler nefes almak ağırlaşıyor, sanki yokluğun ciğerlerime yerleşmiş." },
+      { label: "IV", body: "Adını yazmaya çalıştım, kalem kırıldı. Hatıralar dilimde değil, parmaklarımda kanıyor." },
+      { label: "V", body: "Sevmek bittiğinde, geriye sevdiğin kişinin gölgesi değil; o gölgeye alışmış bir kalp kalıyor." },
+      { label: "VI", body: "Bir gün uyandım ve hiçbir şey acıtmadı. İşte o gün, içimde gerçekten bir şey öldüğünü anladım." },
+    ],
+    collapseLines: [
+      "Önce sesin sustu.",
+      "Sonra ismin uzaklaştı.",
+      "Sonra yüzün belirsizleşti.",
+      "Sonra hatıran ağırlaştı.",
+      "Sonra hatıran hafifledi.",
+      "Sonra… hiçbir şey kalmadı.",
+    ],
+    heroSub: "Bir kalp ölmez, sadece konuşmayı bırakır.\nBu sayfa o sessizliği taşıyor.",
+    storyTitle: "Boğulma sessiz başlar",
+    storyParagraphs: [
+      "Hisler bir gecede ölmez. Önce yorulur. Önce sustukları, söylediklerinden çoğalır. Önce baktıkları yerlere bakmaktan vazgeçerler. Sonra bir sabah uyanırsın ve içinde sadece eski bir oda kalmıştır; perdeleri çekili, ışıkları kapalı.",
+      "Seni en çok yoran şeyin onun gidişi olduğunu sanırsın. Oysa yoran şey, hâlâ dönmesini bekleyen o ufak, inatçı, çocuk kalbindir. Ona susmasını söylemek istersin ama sesin çıkmaz; çünkü ona ait olan tek şey, artık o sestir.",
+      "Bir insanı kaybetmek ölüm değildir. Kaybetmek, hâlâ o insanla yaşamayı sürdürmektir; ama onsuz. Her sabah aynı şehirde uyanırsın, aynı kapıdan çıkarsın, aynı sokaktan geçersin — sadece yanında biri eksiktir.",
+    ],
+    memoriesTitle: "Kırık hatıralar",
+    memoriesSub: "Her biri bir cam kırığı. Sessizce kanatıyor.",
+    collapseTitle: "Çöküş",
+    endingLine: "Bazı isimler ölmez,\nsadece içinde gizlice fısıldamaya başlar.",
+  };
+}
+
+function getDefaultPageAudio(): PageAudioMap {
+  return {
+    home: "home_song.mp3",
+    moments: "song1.mp3",
+    photos: "song2.mp3",
+    writings: "song3.mp3",
+  };
+}
+
+function getDefaultMediaConfig(): MediaConfig {
+  return {
+    heroImageUrl: "/api/private/images/hero.webp",
+    photosDir: "all_photos",
+  };
+}
+
 function getDefaultMomentImages(): string[] {
   return ["photo1.webp", "photo2.webp", "photo3.webp"];
 }
@@ -128,6 +205,15 @@ function loadContent(): unknown {
   }
   if (!base.momentImages) {
     base.momentImages = getDefaultMomentImages();
+  }
+  if (!base.feelings) {
+    base.feelings = getDefaultFeelings();
+  }
+  if (!base.pageAudio) {
+    base.pageAudio = getDefaultPageAudio();
+  }
+  if (!base.mediaConfig) {
+    base.mediaConfig = getDefaultMediaConfig();
   }
   contentCache = base;
   return contentCache;

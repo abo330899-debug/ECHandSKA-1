@@ -53,11 +53,11 @@ const SPECIAL_PHOTO_TEXT_KEYS = [
 ] as const;
 
 export default function Photos({ t, lang }: Props) {
-  usePageAudio("song2.mp3");
   const [lightbox, setLightbox] = useState<string | null>(null);
   const lightboxCloseRef = useRef<HTMLButtonElement>(null);
   const lastFocusedRef = useRef<HTMLElement | null>(null);
   const data = usePrivateContent();
+  usePageAudio(data?.pageAudio?.photos ?? "");
   const p = pickLangPages(data, lang);
 
   useEffect(() => {
@@ -78,13 +78,15 @@ export default function Photos({ t, lang }: Props) {
     };
   }, [lightbox]);
 
+  const photosDir = data?.mediaConfig?.photosDir ?? "";
+
   useEffect(() => {
-    if (!data) return;
+    if (!data || !photosDir) return;
     const all = (data.photos ?? [])
       .slice(0, 6)
-      .map((n) => privateImage(`all_photos/${n}`));
+      .map((n) => privateImage(`${photosDir}/${n}`));
     prefetchImages(all);
-  }, [data]);
+  }, [data, photosDir]);
 
   void lang;
   const captions = data?.captions?.tr ?? [];
@@ -102,7 +104,7 @@ export default function Photos({ t, lang }: Props) {
   const albumPhotos = allPhotos.map((name, i) => {
     const story = i < captions.length ? captions[i] : null;
     return {
-      src: privateImage(`all_photos/${name}`),
+      src: photosDir ? privateImage(`${photosDir}/${name}`) : "",
       title: story?.title ?? null,
       text: story?.text ?? t.photos_fallback_caption,
     };

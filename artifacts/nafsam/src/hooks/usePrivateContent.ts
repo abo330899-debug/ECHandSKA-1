@@ -81,6 +81,35 @@ export interface PrivatePages {
   oblivion_revealed?: string;
 }
 
+export interface MemoryFragment {
+  label: string;
+  body: string;
+}
+
+export interface FeelingsContent {
+  memoryFragments?: MemoryFragment[];
+  collapseLines?: string[];
+  heroSub?: string;
+  storyTitle?: string;
+  storyParagraphs?: string[];
+  memoriesTitle?: string;
+  memoriesSub?: string;
+  collapseTitle?: string;
+  endingLine?: string;
+}
+
+export interface PageAudioMap {
+  home?: string;
+  moments?: string;
+  photos?: string;
+  writings?: string;
+}
+
+export interface MediaConfig {
+  heroImageUrl?: string;
+  photosDir?: string;
+}
+
 export interface PrivateContent {
   writings?: Partial<Record<Lang, WritingsBundle>>;
   captions?: Partial<Record<Lang, StoryCaption[]>>;
@@ -90,6 +119,9 @@ export interface PrivateContent {
   songs?: SongItem[];
   specialPhotos?: SpecialPhotoItem[];
   momentImages?: string[];
+  feelings?: FeelingsContent;
+  pageAudio?: PageAudioMap;
+  mediaConfig?: MediaConfig;
 }
 
 let cache: PrivateContent | null = null;

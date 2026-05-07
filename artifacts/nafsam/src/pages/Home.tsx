@@ -26,8 +26,8 @@ interface Props {
 }
 
 export default function Home({ t, lang }: Props) {
-  usePageAudio("home_song.mp3");
   const data = usePrivateContent();
+  usePageAudio(data?.pageAudio?.home ?? "");
   const p = pickLangPages(data, lang);
 
   const [el, setEl] = useState(elapsed(new Date()));
@@ -37,29 +37,31 @@ export default function Home({ t, lang }: Props) {
     return () => clearInterval(interval);
   }, []);
 
+  const heroImage = data?.mediaConfig?.heroImageUrl ?? "";
+
   useEffect(() => {
-    const HERO = "/api/private/images/hero.webp";
+    if (!heroImage) return;
     if (document.head.querySelector(`link[data-hero-preload="1"]`)) return;
     const link = document.createElement("link");
     link.rel = "preload";
     link.as = "image";
-    link.href = HERO;
+    link.href = heroImage;
     link.setAttribute("fetchpriority", "high");
     link.setAttribute("data-hero-preload", "1");
     document.head.appendChild(link);
     const img = new Image();
     (img as HTMLImageElement & { fetchPriority?: string }).fetchPriority = "high";
     img.decoding = "async";
-    img.src = HERO;
+    img.src = heroImage;
     return () => {
       if (link.parentNode) link.parentNode.removeChild(link);
     };
-  }, []);
+  }, [heroImage]);
 
   return (
     <div className="page-content">
       <section className="hero">
-        <div className="hero-bg" style={{ backgroundImage: `url(/api/private/images/hero.webp)` }} />
+        <div className="hero-bg" style={heroImage ? { backgroundImage: `url(${heroImage})` } : {}} />
         <div className="hero-overlay" />
         <div className="hero-body">
           <span className="eyebrow">{t.hero_eyebrow}</span>

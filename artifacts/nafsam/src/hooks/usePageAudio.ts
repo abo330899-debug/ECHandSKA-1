@@ -15,6 +15,7 @@ export default function usePageAudio(songFile: string) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
+    if (!songFile) return;
     const isLogin = songFile === "login_song.mp3";
     const src = isLogin
       ? `${BASE}media/${songFile}`

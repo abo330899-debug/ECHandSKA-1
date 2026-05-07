@@ -9,8 +9,8 @@ interface Props {
 }
 
 export default function Writings({ t, lang }: Props) {
-  usePageAudio("song3.mp3");
   const data = usePrivateContent();
+  usePageAudio(data?.pageAudio?.writings ?? "");
   const p = pickLangPages(data, lang);
   const bundle = data?.writings?.[lang] ?? data?.writings?.tr ?? null;
 

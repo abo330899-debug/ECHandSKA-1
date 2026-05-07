@@ -37,8 +37,8 @@ interface Props {
 }
 
 export default function Moments({ t, lang }: Props) {
-  usePageAudio("song1.mp3");
   const data = usePrivateContent();
+  usePageAudio(data?.pageAudio?.moments ?? "");
   const p = pickLangPages(data, lang);
 
   const momentImages = data?.momentImages ?? [];
