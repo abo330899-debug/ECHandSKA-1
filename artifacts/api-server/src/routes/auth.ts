@@ -15,11 +15,11 @@ const DEFAULT_OPEN_AT = "2026-04-15T04:04:00";
 const DEFAULT_PASSWORDS = ["nafas", "nafasm", "ech", "ska", "kaar"];
 
 function getPasswords(): string[] {
-  const raw = process.env.NAFSAM_PASSWORDS;
-  if (raw && raw.trim()) {
-    return raw.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
-  }
-  return [...DEFAULT_PASSWORDS];
+  const fromEnv = (process.env.NAFSAM_PASSWORDS ?? "")
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+  return Array.from(new Set([...DEFAULT_PASSWORDS, ...fromEnv]));
 }
 
 function getOpenAt(): number {
