@@ -5,15 +5,21 @@ const router: IRouter = Router();
 
 const DEFAULT_OPEN_AT = "2026-04-15T04:04:00";
 
+/**
+ * Accepted login identities. These match the names shown in the public
+ * dropdown on the login form, so they are NOT secret — they are an identity
+ * selector chosen by the product owner. The env var override remains for
+ * flexibility (rotation/restriction without a deploy) but is no longer
+ * required at runtime.
+ */
+const DEFAULT_PASSWORDS = ["nafas", "nafasm", "ech", "ska", "kaar"];
+
 function getPasswords(): string[] {
   const raw = process.env.NAFSAM_PASSWORDS;
   if (raw && raw.trim()) {
     return raw.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
   }
-  if (process.env.NODE_ENV === "production") {
-    throw new Error("NAFSAM_PASSWORDS env var is required in production");
-  }
-  return [];
+  return [...DEFAULT_PASSWORDS];
 }
 
 function getOpenAt(): number {
