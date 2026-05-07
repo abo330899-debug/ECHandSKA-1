@@ -160,8 +160,8 @@ router.post("/auth/login", (req, res) => {
   res.json({ ok: true });
 });
 
-router.post("/auth/logout", (_req, res) => {
-  clearSession(res);
+router.post("/auth/logout", (req, res) => {
+  clearSession(req, res);
   res.json({ ok: true });
 });
 

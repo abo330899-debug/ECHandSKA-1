@@ -23,7 +23,31 @@ function sign(payload: string): string {
   return `${payload}.${h}`;
 }
 
-function verify(token: string | undefined): { valid: boolean; expiresAt?: number } {
+/**
+ * Server-side revocation store: maps jti → expiresAt (ms).
+ * An in-memory store is appropriate for this single-process deployment.
+ * Entries are purged lazily and on a periodic sweep so the map does not
+ * grow without bound over the 30-day session lifetime.
+ */
+const revokedSessions = new Map<string, number>();
+
+function purgeExpiredRevocations(): void {
+  const now = Date.now();
+  for (const [jti, expiresAt] of revokedSessions) {
+    if (expiresAt <= now) {
+      revokedSessions.delete(jti);
+    }
+  }
+}
+
+setInterval(purgeExpiredRevocations, 60 * 60 * 1000).unref();
+
+interface ParsedToken {
+  jti: string;
+  expiresAt: number;
+}
+
+function verify(token: string | undefined): { valid: boolean } & Partial<ParsedToken> {
   if (!token) return { valid: false };
   const dotIndex = token.lastIndexOf(".");
   if (dotIndex === -1) return { valid: false };
@@ -35,10 +59,9 @@ function verify(token: string | undefined): { valid: boolean; expiresAt?: number
   if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
     return { valid: false };
   }
-  const colonIndex = payload.indexOf(":");
-  if (colonIndex === -1) return { valid: false };
-  const expiresAtStr = payload.slice(0, colonIndex);
-  const embeddedVersion = payload.slice(colonIndex + 1);
+  const parts = payload.split(":");
+  if (parts.length !== 3) return { valid: false };
+  const [expiresAtStr, embeddedVersion, jti] = parts;
   if (embeddedVersion !== getPasswordVersion()) {
     return { valid: false };
   }
@@ -46,12 +69,21 @@ function verify(token: string | undefined): { valid: boolean; expiresAt?: number
   if (!Number.isFinite(expiresAt) || expiresAt < Date.now()) {
     return { valid: false };
   }
-  return { valid: true, expiresAt };
+  const revokedExpiry = revokedSessions.get(jti);
+  if (revokedExpiry !== undefined) {
+    if (revokedExpiry <= Date.now()) {
+      revokedSessions.delete(jti);
+    } else {
+      return { valid: false };
+    }
+  }
+  return { valid: true, jti, expiresAt };
 }
 
 export function issueSession(res: Response): void {
   const expiresAt = Date.now() + SESSION_TTL_MS;
-  const payload = `${String(expiresAt)}:${getPasswordVersion()}`;
+  const jti = crypto.randomBytes(16).toString("base64url");
+  const payload = `${String(expiresAt)}:${getPasswordVersion()}:${jti}`;
   const token = sign(payload);
   res.cookie(COOKIE_NAME, token, {
     httpOnly: true,
@@ -62,7 +94,15 @@ export function issueSession(res: Response): void {
   });
 }
 
-export function clearSession(res: Response): void {
+export function clearSession(req: Request, res: Response): void {
+  const cookies = (req as Request & { cookies?: Record<string, string> }).cookies ?? {};
+  const token = cookies[COOKIE_NAME];
+  if (token) {
+    const result = verify(token);
+    if (result.valid && result.jti && result.expiresAt) {
+      revokedSessions.set(result.jti, result.expiresAt);
+    }
+  }
   res.clearCookie(COOKIE_NAME, { path: "/" });
 }
 
