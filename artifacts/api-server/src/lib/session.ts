@@ -25,9 +25,23 @@ function sign(payload: string): string {
 
 /**
  * Server-side revocation store: maps jti → expiresAt (ms).
- * An in-memory store is appropriate for this single-process deployment.
- * Entries are purged lazily and on a periodic sweep so the map does not
- * grow without bound over the 30-day session lifetime.
+ *
+ * Design assumption: this archive runs as a single-process, single-instance
+ * deployment (Replit Autoscale at minimum-1 / maximum-1 instance). Under
+ * that topology this in-memory store is sufficient — all requests are served
+ * by the same process so every logout is immediately visible to every
+ * subsequent auth check.
+ *
+ * If the deployment is ever scaled to multiple concurrent instances, or if
+ * process restarts within the 30-day session TTL must still honour revocation,
+ * this store must be replaced with a shared durable backend (e.g. a
+ * "revoked_sessions" table in PostgreSQL keyed by jti with a TTL index, or
+ * a Redis SET with EXPIREAT). Until then, a process restart clears the
+ * denylist and any revoked tokens issued before the restart become replayable
+ * again for their remaining TTL.
+ *
+ * Entries are purged lazily (during verify()) and on a periodic hourly sweep
+ * so the map does not grow without bound over the 30-day session lifetime.
  */
 const revokedSessions = new Map<string, number>();
 
