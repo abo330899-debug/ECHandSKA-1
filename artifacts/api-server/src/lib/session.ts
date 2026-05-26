@@ -129,11 +129,17 @@ export function issueSession(res: Response): void {
 }
 
 export async function clearSession(req: Request, res: Response): Promise<void> {
+  // Always clear the browser cookie first so the client loses access
+  // immediately, even if the durable revocation write fails or the DB is down.
+  res.clearCookie(COOKIE_NAME, { path: "/" });
+
   const cookies = (req as Request & { cookies?: Record<string, string> }).cookies ?? {};
   const token = cookies[COOKIE_NAME];
   if (token) {
     const parsed = parseToken(token);
     if (parsed) {
+      // May throw if the DB is unavailable; the caller handles the error,
+      // but the cookie has already been cleared above.
       await ensureTable();
       await pool.query(
         "INSERT INTO revoked_sessions (jti, expires_at) VALUES ($1, $2) ON CONFLICT DO NOTHING",
@@ -141,7 +147,6 @@ export async function clearSession(req: Request, res: Response): Promise<void> {
       );
     }
   }
-  res.clearCookie(COOKIE_NAME, { path: "/" });
 }
 
 export async function isAuthed(req: Request): Promise<boolean> {

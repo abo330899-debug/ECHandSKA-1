@@ -129,12 +129,32 @@ let inflight: Promise<PrivateContent | null> | null = null;
 let generation = 0;
 const subscribers = new Set<(c: PrivateContent | null) => void>();
 
+let unauthorizedHandler: (() => void) | null = null;
+
+/**
+ * Register a callback that fires when a private-content fetch returns 401.
+ * App.tsx uses this to immediately evict auth state when a server-side
+ * revocation or expiry is detected, without waiting for the next poll.
+ */
+export function setUnauthorizedHandler(cb: () => void): void {
+  unauthorizedHandler = cb;
+}
+
 async function loadPrivateContent(): Promise<PrivateContent | null> {
   if (cache) return cache;
   if (inflight) return inflight;
   const myGen = generation;
   inflight = fetch("/api/private/content", { credentials: "same-origin", cache: "no-store" })
-    .then((r) => (r.ok ? (r.json() as Promise<PrivateContent>) : null))
+    .then((r) => {
+      if (r.status === 401) {
+        // Session is no longer valid server-side; evict immediately so the
+        // protected content disappears without waiting for the next poll.
+        clearPrivateContentCache();
+        unauthorizedHandler?.();
+        return null;
+      }
+      return r.ok ? (r.json() as Promise<PrivateContent>) : null;
+    })
     .then((data) => {
       if (myGen !== generation) return null;
       if (data) {
@@ -155,6 +175,38 @@ export function clearPrivateContentCache(): void {
   cache = null;
   inflight = null;
   subscribers.forEach((cb) => cb(null));
+}
+
+/**
+ * Probe /api/private/content with a no-store request, bypassing the module
+ * cache, to detect server-side session revocation while the tab is open.
+ *
+ * Called by App.tsx on the same 5-second interval used for session polling so
+ * that a 401 triggers immediate local eviction rather than waiting for the
+ * session poll to catch the revocation separately.
+ *
+ * On success the cache is refreshed; on 401 unauthorizedHandler fires and the
+ * cache is cleared.  Network errors are silently ignored.
+ */
+export async function revalidatePrivateContent(): Promise<void> {
+  try {
+    const r = await fetch("/api/private/content", {
+      credentials: "same-origin",
+      cache: "no-store",
+    });
+    if (r.status === 401) {
+      clearPrivateContentCache();
+      unauthorizedHandler?.();
+      return;
+    }
+    if (r.ok) {
+      const data = (await r.json()) as PrivateContent;
+      cache = data;
+      subscribers.forEach((cb) => cb(cache));
+    }
+  } catch {
+    // Network errors do not evict; the session poll will handle auth loss.
+  }
 }
 
 export function usePrivateContent(): PrivateContent | null {

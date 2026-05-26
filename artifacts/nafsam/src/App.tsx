@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { Switch, Route, Router as WouterRouter, useLocation, Redirect } from "wouter";
 import { useLang } from "@/hooks/useLang";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -10,7 +10,7 @@ import { useIdleVignette } from "@/hooks/useIdleVignette";
 import Navbar from "@/components/Navbar";
 import Login from "@/pages/Login";
 import { fetchSession, broadcastLogout, logout, AUTH_BROADCAST_CHANNEL, STORAGE_LOGOUT_KEY } from "@/lib/auth";
-import { clearPrivateContentCache } from "@/hooks/usePrivateContent";
+import { clearPrivateContentCache, setUnauthorizedHandler, revalidatePrivateContent } from "@/hooks/usePrivateContent";
 
 const Home = lazy(() => import("@/pages/Home"));
 const Moments = lazy(() => import("@/pages/Moments"));
@@ -35,17 +35,22 @@ function AppContent() {
   useMagneticButtons();
   useIdleVignette();
 
+  const evictAuthRef = useRef<() => void>(() => {});
+
   const evictAuth = () => {
     clearPrivateContentCache();
     setAuthState("anon");
   };
 
+  evictAuthRef.current = evictAuth;
+
   const handleLogout = () => {
-    logout()
-      .catch(() => {})
-      .finally(() => {
-        evictAuth();
-      });
+    // Evict auth immediately so protected content is hidden at once,
+    // before the network request settles. The server-side revocation
+    // proceeds in the background regardless of its outcome.
+    evictAuth();
+    broadcastLogout();
+    logout().catch(() => {});
   };
 
   const refresh = async (evictIfAnon = false) => {
@@ -70,6 +75,10 @@ function AppContent() {
   }, [location]);
 
   useEffect(() => {
+    // Register the unauthorized handler so that a 401 from any private-content
+    // fetch triggers immediate local eviction without waiting for the next poll.
+    setUnauthorizedHandler(() => evictAuthRef.current());
+
     const interval = setInterval(() => {
       let wasAuthed = false;
       setAuthState((prev) => {
@@ -77,6 +86,10 @@ function AppContent() {
         return prev === "authed" ? "checking" : prev;
       });
       refresh(wasAuthed);
+      // When authed, also probe /api/private/content directly so that a 401
+      // triggers immediate eviction even while content is already cached and
+      // no new loads would otherwise be attempted.
+      if (wasAuthed) revalidatePrivateContent();
     }, 5_000);
 
     const onVisibility = () => {
