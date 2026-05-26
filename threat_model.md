@@ -8,6 +8,7 @@ Current production architecture details that matter for future scans:
 - Authentication is implemented as a custom answer-based login flow in `artifacts/api-server/src/routes/auth.ts` and a public login UI in `artifacts/nafsam/src/pages/Login.tsx`.
 - Successful login issues an HMAC-signed `httpOnly` session cookie from `artifacts/api-server/src/lib/session.ts`.
 - Session revocation is backed by PostgreSQL through `revoked_sessions`, but revocation-sensitive guarantees still depend on durable database writes succeeding during logout and verification.
+- The currently deployed app is `private`, so Replit's deployment perimeter reduces public internet reachability; scans should still treat shared-device privacy and authorized-viewer session handling as production-relevant.
 
 Production assumptions for future scans:
 - `NODE_ENV` is `production` in deployed environments.
