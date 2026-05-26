@@ -1,6 +1,7 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import { Switch, Route, Router as WouterRouter, useLocation, Redirect } from "wouter";
 import { useLang } from "@/hooks/useLang";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import Rain from "@/components/Rain";
 import FloatingHearts from "@/components/FloatingHearts";
 import DustParticles from "@/components/DustParticles";
@@ -28,7 +29,7 @@ function ProtectedRoute({ state, children }: { state: AuthState; children: React
 }
 
 function AppContent() {
-  const { lang, t } = useLang();
+  const { lang, setLang, t } = useLang();
   const [authState, setAuthState] = useState<AuthState>("checking");
   const [location] = useLocation();
   useMagneticButtons();
@@ -101,6 +102,7 @@ function AppContent() {
       <Rain />
       <FloatingHearts />
       <DustParticles />
+      <LanguageSwitcher lang={lang} setLang={setLang} />
       {authState === "authed" && <Navbar t={t} />}
       <main>
         <Switch>

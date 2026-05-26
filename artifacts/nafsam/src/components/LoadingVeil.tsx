@@ -1,5 +1,20 @@
 import { useEffect, useState } from "react";
 
+const SUB_TEXT: Record<string, string> = {
+  tr: "açılıyor…",
+  en: "opening…",
+  ar: "يتم الفتح…",
+  fa: "در حال باز شدن…",
+};
+
+function getStoredLang(): string {
+  try {
+    return localStorage.getItem("site_lang") || "tr";
+  } catch {
+    return "tr";
+  }
+}
+
 interface Props {
   brand?: string;
   minDuration?: number;
@@ -8,6 +23,8 @@ interface Props {
 export default function LoadingVeil({ brand = "Nafsam", minDuration = 1100 }: Props) {
   const [hidden, setHidden] = useState(false);
   const [removed, setRemoved] = useState(false);
+  const lang = getStoredLang();
+  const sub = SUB_TEXT[lang] ?? SUB_TEXT.tr;
 
   useEffect(() => {
     document.documentElement.setAttribute("aria-busy", "true");
@@ -43,7 +60,7 @@ export default function LoadingVeil({ brand = "Nafsam", minDuration = 1100 }: Pr
       className={`loading-veil${hidden ? " is-hidden" : ""}`}
       role="status"
       aria-live="polite"
-      aria-label="Yükleniyor"
+      aria-label={sub}
       aria-hidden={hidden}
     >
       <div className="loading-veil-glow" />
@@ -52,7 +69,7 @@ export default function LoadingVeil({ brand = "Nafsam", minDuration = 1100 }: Pr
         <div className="loading-veil-line">
           <span />
         </div>
-        <div className="loading-veil-sub">açılıyor…</div>
+        <div className="loading-veil-sub">{sub}</div>
       </div>
     </div>
   );

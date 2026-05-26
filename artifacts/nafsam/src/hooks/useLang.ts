@@ -1,8 +1,18 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { type Lang, translations } from "@/i18n/translations";
 
+function getSavedLang(): Lang {
+  try {
+    const saved = localStorage.getItem("site_lang") as Lang | null;
+    if (saved && saved in translations) return saved;
+  } catch {
+    /* storage blocked */
+  }
+  return "tr";
+}
+
 export function useLang() {
-  const lang: Lang = "tr";
+  const [lang, setLangState] = useState<Lang>(getSavedLang);
   const t = translations[lang];
 
   useEffect(() => {
@@ -15,9 +25,7 @@ export function useLang() {
     }
   }, [lang, t.dir]);
 
-  const setLang = (_l: Lang) => {
-    /* single-language site */
-  };
+  const setLang = (l: Lang) => setLangState(l);
 
   return { lang, setLang, t };
 }
