@@ -1,4 +1,4 @@
-import { Router, type IRouter } from "express";
+import { Router, type IRouter, type Request } from "express";
 import { issueSession, clearSession, isAuthed } from "../lib/session";
 
 const router: IRouter = Router();
@@ -33,6 +33,48 @@ function getOpenAt(): number {
   const raw = process.env.NAFSAM_OPEN_AT || DEFAULT_OPEN_AT;
   const t = new Date(raw).getTime();
   return Number.isFinite(t) ? t : new Date(DEFAULT_OPEN_AT).getTime();
+}
+
+/**
+ * Returns the set of origins that are permitted to submit login requests.
+ * Mirrors the allow-list used by the CORS middleware in app.ts.
+ */
+function getAllowedOrigins(): Set<string> {
+  const allowed = new Set<string>();
+  const domains = process.env.REPLIT_DOMAINS ?? "";
+  for (const d of domains.split(",")) {
+    const t = d.trim();
+    if (t) allowed.add(`https://${t}`);
+  }
+  const devDomain = process.env.REPLIT_DEV_DOMAIN ?? "";
+  if (devDomain) allowed.add(`https://${devDomain}`);
+  if (process.env.NODE_ENV !== "production") {
+    allowed.add("http://localhost");
+    allowed.add("http://127.0.0.1");
+  }
+  return allowed;
+}
+
+/**
+ * Returns true when the request origin is acceptable for the login endpoint.
+ * Requests with no Origin header (e.g. server-to-server, curl) are allowed
+ * only in non-production environments; in production an Origin is required so
+ * that bare HTML form posts from unknown sites are rejected.
+ */
+function originAllowed(req: Request): boolean {
+  const origin = req.headers["origin"];
+  if (!origin) {
+    return process.env.NODE_ENV !== "production";
+  }
+  const allowed = getAllowedOrigins();
+  if (allowed.has(origin)) return true;
+  if (process.env.NODE_ENV !== "production") {
+    return (
+      origin.startsWith("http://localhost") ||
+      origin.startsWith("http://127.0.0.1")
+    );
+  }
+  return false;
 }
 
 const recentAttempts = new Map<string, { count: number; firstAt: number }>();
@@ -143,6 +185,27 @@ router.get("/auth/session", async (req, res) => {
 });
 
 router.post("/auth/login", (req, res) => {
+  // Reject requests that do not carry a JSON body. HTML form submissions always
+  // use application/x-www-form-urlencoded; requiring JSON ensures a browser
+  // cannot trigger this endpoint via a plain <form> post. A cross-origin
+  // JavaScript fetch with JSON triggers a CORS preflight that is blocked by
+  // the CORS middleware, so only same-origin (or explicitly allowed) JS can
+  // reach this handler with the correct content type.
+  const contentType = req.headers["content-type"] ?? "";
+  if (!contentType.includes("application/json")) {
+    res.status(415).json({ error: "unsupported_media_type" });
+    return;
+  }
+
+  // Validate the Origin header against the same allow-list used by CORS.
+  // This provides a defense-in-depth server-side check against cross-origin
+  // form posts (which browsers send with an Origin header but are not subject
+  // to the CORS read-restriction the middleware enforces).
+  if (!originAllowed(req)) {
+    res.status(403).json({ error: "forbidden" });
+    return;
+  }
+
   const ip = (req.ip || req.socket.remoteAddress || "unknown").toString();
   if (rateLimited(ip)) {
     res.status(429).json({ error: "rate_limited" });
