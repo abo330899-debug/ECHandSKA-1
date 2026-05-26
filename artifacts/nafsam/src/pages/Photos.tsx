@@ -88,8 +88,7 @@ export default function Photos({ t, lang }: Props) {
     prefetchImages(all);
   }, [data, photosDir]);
 
-  void lang;
-  const captions = data?.captions?.tr ?? [];
+  const captions = data?.captions?.[lang] ?? data?.captions?.tr ?? [];
   const allPhotos = data?.photos ?? [];
 
   const rawSpecialPhotos = data?.specialPhotos ?? [];
