@@ -65,7 +65,7 @@ export default function Feelings({ t, lang }: Props) {
       revealAll();
       return;
     }
-  }, [data]);
+  }, [data, lang]);
 
   useEffect(() => {
     const prevTitle = document.title;
