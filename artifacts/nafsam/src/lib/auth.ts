@@ -51,7 +51,26 @@ export async function login(answer: string): Promise<LoginResult> {
   }
 }
 
+export const AUTH_BROADCAST_CHANNEL = "nafsam-auth";
+export const STORAGE_LOGOUT_KEY = "nafsam-logout";
+
+export function broadcastLogout(): void {
+  try {
+    const bc = new BroadcastChannel(AUTH_BROADCAST_CHANNEL);
+    bc.postMessage("logout");
+    bc.close();
+  } catch {
+    // BroadcastChannel not available in this context
+  }
+  try {
+    localStorage.setItem(STORAGE_LOGOUT_KEY, String(Date.now()));
+  } catch {
+    // localStorage not available in this context
+  }
+}
+
 export async function logout(): Promise<void> {
+  broadcastLogout();
   try {
     await fetch("/api/auth/logout", {
       method: "POST",

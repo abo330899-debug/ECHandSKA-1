@@ -8,7 +8,7 @@ import { useMagneticButtons } from "@/hooks/useMagneticButtons";
 import { useIdleVignette } from "@/hooks/useIdleVignette";
 import Navbar from "@/components/Navbar";
 import Login from "@/pages/Login";
-import { fetchSession } from "@/lib/auth";
+import { fetchSession, broadcastLogout, AUTH_BROADCAST_CHANNEL, STORAGE_LOGOUT_KEY } from "@/lib/auth";
 import { clearPrivateContentCache } from "@/hooks/usePrivateContent";
 
 const Home = lazy(() => import("@/pages/Home"));
@@ -34,12 +34,18 @@ function AppContent() {
   useMagneticButtons();
   useIdleVignette();
 
+  const evictAuth = () => {
+    clearPrivateContentCache();
+    setAuthState("anon");
+  };
+
   const refresh = async () => {
     const s = await fetchSession();
     const next: AuthState = s.authed ? "authed" : "anon";
     setAuthState((prev) => {
       if (prev === "authed" && next !== "authed") {
         clearPrivateContentCache();
+        broadcastLogout();
       }
       return next;
     });
@@ -51,19 +57,42 @@ function AppContent() {
   }, [location]);
 
   useEffect(() => {
-    const interval = setInterval(refresh, 30_000);
+    const interval = setInterval(refresh, 5_000);
 
     const onVisibility = () => {
-      if (document.visibilityState === "visible") refresh();
+      if (document.visibilityState === "visible") {
+        setAuthState((prev) => (prev === "authed" ? "checking" : prev));
+        refresh();
+      }
     };
-    const onFocus = () => refresh();
+    const onFocus = () => {
+      setAuthState((prev) => (prev === "authed" ? "checking" : prev));
+      refresh();
+    };
     document.addEventListener("visibilitychange", onVisibility);
     window.addEventListener("focus", onFocus);
+
+    let channel: BroadcastChannel | null = null;
+    try {
+      channel = new BroadcastChannel(AUTH_BROADCAST_CHANNEL);
+      channel.onmessage = (e) => {
+        if (e.data === "logout") evictAuth();
+      };
+    } catch {
+      // BroadcastChannel not available in this context
+    }
+
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === STORAGE_LOGOUT_KEY) evictAuth();
+    };
+    window.addEventListener("storage", onStorage);
 
     return () => {
       clearInterval(interval);
       document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("focus", onFocus);
+      window.removeEventListener("storage", onStorage);
+      channel?.close();
     };
   }, []);
 
