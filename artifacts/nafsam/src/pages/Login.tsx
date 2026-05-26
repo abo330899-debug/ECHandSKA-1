@@ -4,6 +4,18 @@ import { type Translations, type Lang } from "@/i18n/translations";
 import usePageAudio from "@/hooks/usePageAudio";
 import { fetchSession, login, type SessionCard } from "@/lib/auth";
 
+const USERS = [
+  { value: "", label: "\u2014\u2014\u2014\u2014" },
+  { value: "nafas", label: "nafas" },
+  { value: "Nafasm", label: "Nafasm" },
+  { value: "Ech", label: "Ech" },
+  { value: "Ska", label: "Ska" },
+  { value: "ech", label: "ech" },
+  { value: "ska", label: "ska" },
+  { value: "kaar", label: "kaar" },
+  { value: "Kaar", label: "Kaar" },
+];
+
 interface CountdownTime {
   days: number;
   hrs: number;
@@ -35,7 +47,7 @@ export default function Login({ t, lang, onAuth }: Props) {
   const [countdown, setCountdown] = useState<CountdownTime | null>(null);
   const [cards, setCards] = useState<SessionCard[]>([]);
   const [cardCount, setCardCount] = useState<number>(0);
-  const [answer, setAnswer] = useState("");
+  const [selectedUser, setSelectedUser] = useState("");
   const [msg, setMsg] = useState("");
   const [msgType, setMsgType] = useState<"" | "error" | "success">("");
   const [submitting, setSubmitting] = useState(false);
@@ -90,7 +102,7 @@ export default function Login({ t, lang, onAuth }: Props) {
       return;
     }
     setSubmitting(true);
-    const result = await login(answer);
+    const result = await login(selectedUser);
     setSubmitting(false);
     if (result.ok) {
       setMsg(t.login_msg_success);
@@ -139,19 +151,21 @@ export default function Login({ t, lang, onAuth }: Props) {
         </div>
 
         <form className="login-form" onSubmit={handleSubmit}>
-          <label className="sr-only" htmlFor="login-answer">{t.login_input}</label>
-          <input
-            id="login-answer"
-            type="text"
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-            placeholder={t.login_input}
-            className="login-input"
+          <label className="sr-only" htmlFor="login-user">{t.login_input}</label>
+          <select
+            id="login-user"
+            value={selectedUser}
+            onChange={(e) => setSelectedUser(e.target.value)}
+            className="login-select"
             disabled={submitting || !isOpen}
-            autoComplete="off"
-            spellCheck={false}
-          />
-          <button type="submit" className="btn btn-primary login-btn" disabled={submitting || !answer}>
+          >
+            {USERS.map((u) => (
+              <option key={u.value} value={u.value}>
+                {u.label}
+              </option>
+            ))}
+          </select>
+          <button type="submit" className="btn btn-primary login-btn" disabled={submitting || !selectedUser}>
             {t.login_button}
           </button>
         </form>

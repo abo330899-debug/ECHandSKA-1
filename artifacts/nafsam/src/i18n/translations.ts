@@ -69,7 +69,7 @@ export const translations: Record<Lang, Translations> = {
     nav_logout: "Çıkış",
     login_title: "Nafsam",
     login_text: "Bu yer geri sayım tamamlanana kadar kapalı kalır. Her isim kendi vaktini bekler. Sonunda artık sayaç kalmaz... sadece sözler kalır.",
-    login_input: "Cevabı yaz",
+    login_input: "İsmi seç",
     login_button: "Kalanı Aç",
     login_hint: "Sayfa süre bitmeden açılmaz. Sonra yalnızca doğru cevapları bilenler açabilir.",
     login_msg_closed: "Geri sayım tamamlanmadan sayfa açılmaz",
