@@ -48,7 +48,7 @@ Production assumptions for future scans:
 
 ### Spoofing
 
-The server must fail closed if production authentication configuration is incomplete. Accepted login answers must come from deployment secret storage rather than hardcoded fallbacks or tracked configuration files, and the application must not expose exact accepted answers or answer identifiers to unauthenticated visitors, including in public UI elements such as login dropdowns or bootstrap endpoints such as `/api/auth/session`. Session cookies must remain signed with a production-only secret and validated on every protected request. Changing the archive answer or performing an access-revocation action must also provide a way to invalidate already-issued sessions, and that invalidation must survive routine restarts and redeploys. Logout and other revocation actions must not silently report success when the durable revocation write fails.
+The server must fail closed if production authentication configuration is incomplete. Accepted login answers must come from deployment secret storage rather than hardcoded fallbacks or tracked configuration files, and the application must not expose exact accepted answers or answer identifiers to unauthenticated visitors, including in public UI elements such as login dropdowns or bootstrap endpoints such as `/api/auth/session`. Session cookies must remain signed with a production-only secret and validated on every protected request. Changing the archive answer or performing an access-revocation action must also provide a way to invalidate already-issued sessions, and that invalidation must survive routine restarts and redeploys. Logout and other revocation actions must not silently report success when the durable revocation write fails. The frontend must also expose a usable way for legitimate viewers to terminate their own session so shared-device privacy does not depend on manual cookie clearing outside the app.
 
 ### Tampering
 
@@ -60,7 +60,7 @@ Protected memories must not be exposed through public frontend bundles, logs, er
 
 ### Denial of Service
 
-The archive has a small public authentication surface, so unauthenticated abuse of `/api/auth/login` can materially deny access to intended viewers. Rate limiting must be keyed on trustworthy client identity in the deployed proxy topology and must not collapse unrelated users into a shared bucket that an attacker can exhaust for everyone.
+The archive has a small public authentication surface, so unauthenticated abuse of `/api/auth/login` can materially deny access to intended viewers. Rate limiting must be keyed on trustworthy client identity in the deployed proxy topology and must not collapse unrelated users into a shared bucket that an attacker can exhaust for everyone. Because the login endpoint is intentionally public and answer-based, cross-origin browser automation should not be allowed to turn unrelated visitors into a distributed guessing pool that materially weakens the only online throttle protecting the archive answers.
 
 ### Elevation of Privilege
 
