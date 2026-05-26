@@ -178,3 +178,5 @@ overrides:
   rollup>@rollup/rollup-win32-x64-gnu: '-'
   rollup>@rollup/rollup-win32-x64-msvc: '-'
   yaml: ^2.8.3
+  qs: ^6.15.2
+  fast-uri: ^3.1.2
