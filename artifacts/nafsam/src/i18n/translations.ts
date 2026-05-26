@@ -50,6 +50,20 @@ export interface Translations {
   countdown_second: string;
   riddle_prompt: string;
   photos_fallback_caption: string;
+  common_close: string;
+  common_prev: string;
+  common_next: string;
+  common_fullscreen: string;
+  common_theater_compact: string;
+  common_theater_wide: string;
+  audio_unsupported: string;
+  video_mega_text: string;
+  video_mega_open: string;
+  feelings_hero_eyebrow: string;
+  feelings_hero_word_1: string;
+  feelings_hero_word_2: string;
+  feelings_scroll_hint: string;
+  feelings_doc_title: string;
 }
 
 export const translations: Record<Lang, Translations> = {
@@ -103,6 +117,20 @@ export const translations: Record<Lang, Translations> = {
     countdown_second: "saniye",
     riddle_prompt: "Soruyu çöz",
     photos_fallback_caption: "Sessiz bir anı… ama unutulmaz.",
+    common_close: "Kapat",
+    common_prev: "Önceki",
+    common_next: "Sonraki",
+    common_fullscreen: "Tam ekran",
+    common_theater_compact: "Kompakt mod",
+    common_theater_wide: "Geniş mod",
+    audio_unsupported: "Tarayıcınız ses oynatmayı desteklemiyor.",
+    video_mega_text: "Bu video MEGA üzerinde tutuluyor. Yeni sekmede açmak için tıkla.",
+    video_mega_open: "Videoyu Aç",
+    feelings_hero_eyebrow: "SESSİZLİĞİN BAŞLANGICI",
+    feelings_hero_word_1: "Hisler",
+    feelings_hero_word_2: "Öldüğünde",
+    feelings_scroll_hint: "aşağı in",
+    feelings_doc_title: "Hisler Öldüğünde",
   },
 
   en: {
@@ -155,6 +183,20 @@ export const translations: Record<Lang, Translations> = {
     countdown_second: "seconds",
     riddle_prompt: "Solve the riddle",
     photos_fallback_caption: "A silent moment… but unforgettable.",
+    common_close: "Close",
+    common_prev: "Previous",
+    common_next: "Next",
+    common_fullscreen: "Fullscreen",
+    common_theater_compact: "Compact view",
+    common_theater_wide: "Theater view",
+    audio_unsupported: "Your browser does not support audio playback.",
+    video_mega_text: "This video is hosted on MEGA. Tap to open in a new tab.",
+    video_mega_open: "Open Video",
+    feelings_hero_eyebrow: "THE BEGINNING OF SILENCE",
+    feelings_hero_word_1: "When Feelings",
+    feelings_hero_word_2: "Die",
+    feelings_scroll_hint: "scroll down",
+    feelings_doc_title: "When Feelings Die",
   },
 
   ar: {
@@ -207,6 +249,20 @@ export const translations: Record<Lang, Translations> = {
     countdown_second: "ثانية",
     riddle_prompt: "حلّ اللغز",
     photos_fallback_caption: "لحظة صامتة… لكنها لا تُنسى.",
+    common_close: "إغلاق",
+    common_prev: "السابق",
+    common_next: "التالي",
+    common_fullscreen: "ملء الشاشة",
+    common_theater_compact: "وضع مضغوط",
+    common_theater_wide: "وضع موسّع",
+    audio_unsupported: "متصفحك لا يدعم تشغيل الصوت.",
+    video_mega_text: "هذا المقطع محفوظ على MEGA. اضغط لفتحه في تبويب جديد.",
+    video_mega_open: "افتح المقطع",
+    feelings_hero_eyebrow: "بداية الصمت",
+    feelings_hero_word_1: "حين تموت",
+    feelings_hero_word_2: "المشاعر",
+    feelings_scroll_hint: "انزل للأسفل",
+    feelings_doc_title: "حين تموت المشاعر",
   },
 
   fa: {
@@ -259,5 +315,19 @@ export const translations: Record<Lang, Translations> = {
     countdown_second: "ثانیه",
     riddle_prompt: "معما را حل کن",
     photos_fallback_caption: "لحظه‌ای ساکت… اما فراموش‌نشدنی.",
+    common_close: "بستن",
+    common_prev: "قبلی",
+    common_next: "بعدی",
+    common_fullscreen: "تمام‌صفحه",
+    common_theater_compact: "حالت فشرده",
+    common_theater_wide: "حالت گسترده",
+    audio_unsupported: "مرورگر شما از پخش صدا پشتیبانی نمی‌کند.",
+    video_mega_text: "این ویدیو در MEGA نگه‌داری می‌شود. برای باز کردن در زبانه جدید کلیک کن.",
+    video_mega_open: "باز کردن ویدیو",
+    feelings_hero_eyebrow: "آغاز سکوت",
+    feelings_hero_word_1: "وقتی احساس‌ها",
+    feelings_hero_word_2: "می‌میرند",
+    feelings_scroll_hint: "به پایین برو",
+    feelings_doc_title: "وقتی احساس‌ها می‌میرند",
   },
 };

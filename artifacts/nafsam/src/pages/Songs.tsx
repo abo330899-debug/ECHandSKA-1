@@ -94,7 +94,7 @@ export default function Songs({ t, lang }: Props) {
               src={s.src}
               className="audio-player"
             >
-              Tarayıcınız ses oynatmayı desteklemiyor.
+              {t.audio_unsupported}
             </audio>
           </RevealCard>
         ))}

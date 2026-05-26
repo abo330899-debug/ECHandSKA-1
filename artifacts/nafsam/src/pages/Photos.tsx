@@ -242,7 +242,7 @@ export default function Photos({ t, lang }: Props) {
               e.stopPropagation();
               setLightbox(null);
             }}
-            aria-label="Kapat"
+            aria-label={t.common_close}
           >
             &times;
           </button>

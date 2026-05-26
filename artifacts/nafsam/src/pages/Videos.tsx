@@ -375,7 +375,7 @@ export default function Videos({ t, lang }: Props) {
                 type="button"
                 className="v-side-nav v-side-nav-prev"
                 onClick={prevVideo}
-                aria-label="Önceki"
+                aria-label={t.common_prev}
               >
                 <ChevronLeftIcon />
               </button>
@@ -383,7 +383,7 @@ export default function Videos({ t, lang }: Props) {
                 type="button"
                 className="v-side-nav v-side-nav-next"
                 onClick={nextVideo}
-                aria-label="Sonraki"
+                aria-label={t.common_next}
               >
                 <ChevronRightIcon />
               </button>
@@ -396,7 +396,7 @@ export default function Videos({ t, lang }: Props) {
               type="button"
               className="v-close-btn"
               onClick={closeModal}
-              aria-label="Kapat"
+              aria-label={t.common_close}
             >
               <CloseIcon />
             </button>
@@ -430,7 +430,7 @@ export default function Videos({ t, lang }: Props) {
                     <PlayIcon />
                   </div>
                   <p className="v-modal-mega-text">
-                    Bu video MEGA üzerinde tutuluyor. Yeni sekmede açmak için tıkla.
+                    {t.video_mega_text}
                   </p>
                   <a
                     className="v-btn v-btn-accent v-btn-cta"
@@ -438,7 +438,7 @@ export default function Videos({ t, lang }: Props) {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Videoyu Aç
+                    {t.video_mega_open}
                   </a>
                 </div>
               )}
@@ -457,7 +457,7 @@ export default function Videos({ t, lang }: Props) {
                       type="button"
                       className="v-btn v-btn-icon"
                       onClick={toggleTheater}
-                      aria-label={theaterMode ? "Kompakt mod" : "Geniş mod"}
+                      aria-label={theaterMode ? t.common_theater_compact : t.common_theater_wide}
                       aria-pressed={theaterMode}
                     >
                       {theaterMode ? <CompressIcon /> : <ExpandIcon />}
@@ -466,7 +466,7 @@ export default function Videos({ t, lang }: Props) {
                       type="button"
                       className="v-btn v-btn-icon"
                       onClick={toggleFullscreen}
-                      aria-label="Tam ekran"
+                      aria-label={t.common_fullscreen}
                     >
                       <ExpandIcon />
                     </button>
@@ -477,7 +477,7 @@ export default function Videos({ t, lang }: Props) {
                   className="v-btn v-btn-ghost"
                   onClick={closeModal}
                 >
-                  Kapat
+                  {t.common_close}
                 </button>
               </div>
             </div>

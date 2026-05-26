@@ -53,13 +53,13 @@ export default function Feelings({ t }: Props) {
 
   useEffect(() => {
     const prevTitle = document.title;
-    document.title = `Hisler Öldüğünde · ${t.brand}`;
+    document.title = `${t.feelings_doc_title} · ${t.brand}`;
     document.body.classList.add("ambient-mute");
     return () => {
       document.title = prevTitle;
       document.body.classList.remove("ambient-mute");
     };
-  }, [t.brand]);
+  }, [t.brand, t.feelings_doc_title]);
 
   return (
     <div className="feelings-page" ref={rootRef}>
@@ -71,12 +71,12 @@ export default function Feelings({ t }: Props) {
         <div className="fl-hero-inner">
           <div className="fl-hero-eyebrow" data-reveal>
             <span className="fl-eyebrow-line" />
-            <span>SESSİZLİĞİN BAŞLANGICI</span>
+            <span>{t.feelings_hero_eyebrow}</span>
             <span className="fl-eyebrow-line" />
           </div>
           <h1 className="fl-hero-title" data-reveal>
-            <span className="fl-hero-word">Hisler</span>
-            <span className="fl-hero-word fl-hero-word-em">Öldüğünde</span>
+            <span className="fl-hero-word">{t.feelings_hero_word_1}</span>
+            <span className="fl-hero-word fl-hero-word-em">{t.feelings_hero_word_2}</span>
           </h1>
           {heroSub && (
             <p className="fl-hero-sub" data-reveal>
@@ -86,7 +86,7 @@ export default function Feelings({ t }: Props) {
             </p>
           )}
           <div className="fl-hero-scroll" data-reveal aria-hidden="true">
-            <span>aşağı in</span>
+            <span>{t.feelings_scroll_hint}</span>
             <span className="fl-hero-scroll-line" />
           </div>
         </div>
