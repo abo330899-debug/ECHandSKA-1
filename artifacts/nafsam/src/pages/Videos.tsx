@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, type CSSProperties, type Reac
 import { type Translations, type Lang } from "@/i18n/translations";
 import { usePrivateContent, pickLangPages } from "@/hooks/usePrivateContent";
 import useReveal from "@/hooks/useReveal";
+import { mediaUrl, posterUrl } from "@/lib/r2";
 
 function RevealVideoCard({
   className = "",
@@ -49,13 +50,12 @@ function detectKind(file: string): VideoKind {
 
 function buildSrc(file: string) {
   if (/^https?:\/\//i.test(file)) return file;
-  return `/api/private/media/${encodeURIComponent(file)}`;
+  return mediaUrl(file);
 }
 
 function buildPoster(file: string): string {
   if (/^https?:\/\//i.test(file)) return "";
-  const base = file.replace(/\.[^.]+$/, "");
-  return `/api/private/posters/${encodeURIComponent(base)}.jpg`;
+  return posterUrl(file);
 }
 
 function getYouTubeId(url: string): string {
