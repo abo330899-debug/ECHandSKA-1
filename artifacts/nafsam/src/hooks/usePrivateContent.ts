@@ -128,7 +128,7 @@ export interface PrivateContent {
 export function pickLangFeelings(
   data: PrivateContent | null,
   lang: Lang,
-): FeelingsConten t {
+): FeelingsContent {
   if (!data?.feelings) return {};
   return data.feelings[lang] ?? data.feelings.tr ?? {};
 }

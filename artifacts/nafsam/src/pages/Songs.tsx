@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { usePrivateContent, pickLangPages } from "@/hooks/usePrivateContent";
 import RevealCard from "@/components/RevealCard";
 import { PAGE_AUDIO_PAUSE_EVENT, PAGE_AUDIO_RESUME_EVENT } from "@/hooks/usePageAudio";
+import { mediaUrl } from "@/lib/r2";
 
 interface Props {
   t: Translations;
@@ -91,7 +92,7 @@ export default function Songs({ t, lang }: Props) {
             <audio
               controls
               preload="none"
-              src={s.src}
+              src={mediaUrl(s.src)}
               className="audio-player"
             >
               {t.audio_unsupported}
