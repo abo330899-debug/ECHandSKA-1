@@ -1647,7 +1647,7 @@ h1,h2,h3,.brand,.hero-title,.page-header h1,.timeline-card h3,
 
 .featured-quote{font-family:var(--serif);color:var(--pink)}
 
-audio,video{filter:saturate(.95)}
+audio,video{filter:none}
 
 /* Login screen polish */
 .login-card,.login-shell,.login-wrap,
@@ -1722,15 +1722,15 @@ audio,video{filter:saturate(.95)}
   display:flex;
   flex-direction:column;
   box-shadow:
-    0 18px 40px -22px rgba(0,0,0,.7),
+    0 12px 28px -18px rgba(0,0,0,.5),
     0 0 0 1px rgba(255,255,255,.02) inset;
   transition:
-    opacity .7s var(--ease),
-    transform .7s var(--ease),
-    box-shadow .5s var(--ease),
-    border-color .4s var(--ease);
+    opacity .35s var(--ease),
+    transform .35s var(--ease),
+    box-shadow .3s var(--ease),
+    border-color .3s var(--ease);
   opacity:0;
-  transform:translateY(18px);
+  transform:translateY(10px);
   will-change:opacity,transform;
 }
 .photos-luxe .photo-card.in-view{
@@ -1774,8 +1774,8 @@ audio,video{filter:saturate(.95)}
   height:100%;
   object-fit:cover;
   object-position:center;
-  transition:transform .9s cubic-bezier(.2,.8,.2,1), filter .5s ease;
-  filter:saturate(.96) brightness(.95);
+  transition:transform .6s cubic-bezier(.2,.8,.2,1), filter .4s ease;
+  filter:none;
 }
 .photos-luxe .photo-card:hover .photo-img{
   transform:scale(1.05);
@@ -1788,8 +1788,8 @@ audio,video{filter:saturate(.95)}
   inset:auto 0 0 0;
   padding:18px 16px 14px;
   background:linear-gradient(to top,
-    rgba(7,11,22,.92) 0%,
-    rgba(7,11,22,.72) 40%,
+    rgba(7,11,22,.72) 0%,
+    rgba(7,11,22,.45) 50%,
     rgba(7,11,22,.0) 100%);
   pointer-events:none;
   z-index:2;
@@ -2033,7 +2033,7 @@ audio,video{filter:saturate(.95)}
     transform .5s cubic-bezier(.2,.8,.2,1),
     box-shadow .5s cubic-bezier(.2,.8,.2,1),
     border-color .4s ease;
-  animation:luxRise .7s cubic-bezier(.2,.8,.2,1) both;
+  animation:luxRise .35s cubic-bezier(.2,.8,.2,1) both;
   outline:none;
 }
 .videos-luxe .v-gallery .v-card:nth-child(2){animation-delay:.05s}
@@ -2059,13 +2059,13 @@ audio,video{filter:saturate(.95)}
   min-height:240px;
   max-height:420px;
   overflow:hidden;
-  background:#06070d;
+  background:#0e1120;
 }
 .videos-luxe .v-thumb{
   position:absolute;
   inset:0;
   overflow:hidden;
-  background:#06070d;
+  background:#0e1120;
 }
 .videos-luxe .v-thumb video,
 .videos-luxe .v-thumb img{
@@ -2091,7 +2091,7 @@ audio,video{filter:saturate(.95)}
   inset:0;
   z-index:0;
   object-fit:cover;
-  filter:blur(28px) saturate(1.1) brightness(.55);
+  filter:blur(22px) saturate(1.05) brightness(.78);
   transform:scale(1.18);
   pointer-events:none;
   transition:none;
@@ -3191,7 +3191,7 @@ body::after{
   box-shadow:var(--lux-shadow), 0 0 50px rgba(216,165,124,.14);
 }
 .photos-luxe .photo-card-overlay{
-  background:linear-gradient(180deg, transparent 0%, rgba(5,8,20,.45) 55%, rgba(5,8,20,.92) 100%);
+  background:linear-gradient(180deg, transparent 0%, rgba(5,8,20,.35) 55%, rgba(5,8,20,.68) 100%);
 }
 .photos-luxe .photo-card-badge,
 .videos-luxe .v-duration{
@@ -3571,17 +3571,17 @@ footer,.footer{padding:var(--s-4) var(--s-3)}
   height:100%;
   object-fit:cover;
   opacity:0;
-  filter:blur(14px) saturate(.85);
-  transform:scale(1.04);
+  filter:blur(6px);
+  transform:scale(1.02);
   transition:
-    opacity .6s var(--ease),
-    filter .8s var(--ease),
-    transform .8s var(--ease);
+    opacity .3s var(--ease),
+    filter .35s var(--ease),
+    transform .35s var(--ease);
   will-change:opacity,filter,transform;
 }
 .lux-img.is-loaded{
   opacity:1;
-  filter:blur(0) saturate(1);
+  filter:none;
   transform:scale(1);
 }
 @keyframes luxShimmer{
