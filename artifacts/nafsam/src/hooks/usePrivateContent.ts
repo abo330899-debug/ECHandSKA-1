@@ -58,6 +58,10 @@ export interface PrivatePages {
   photo11_text?: string; photo12_text?: string; photo13_text?: string;
   photo14_text?: string; photo15_text?: string; photo16_text?: string;
   photo17_text?: string; photo18_text?: string; photo19_text?: string;
+  photo20_text?: string; photo21_text?: string; photo22_text?: string;
+  photo23_text?: string; photo24_text?: string; photo25_text?: string;
+  photo26_text?: string; photo27_text?: string; photo28_text?: string;
+  photo29_text?: string;
   songs_footer?: string;
   song1_text?: string; song2_text?: string; song3_text?: string; song4_text?: string;
   videos_text?: string;
