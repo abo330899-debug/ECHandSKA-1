@@ -5,6 +5,20 @@ import { pool } from "@workspace/db";
 const COOKIE_NAME = "nafsam_session";
 const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
+const DB_AVAILABLE = pool !== null;
+
+/* In-memory fallback revocation store (used when no DATABASE_URL is set).
+   Entries are cleared on restart — acceptable trade-off for no-DB mode. */
+const memRevoked = new Map<string, number>(); // jti → expiresAt
+
+function pruneMemRevoked() {
+  const now = Date.now();
+  for (const [jti, exp] of memRevoked) {
+    if (exp <= now) memRevoked.delete(jti);
+  }
+}
+setInterval(pruneMemRevoked, 60 * 60 * 1000).unref();
+
 function getSecret(): string {
   const s = process.env.NAFSAM_SESSION_SECRET;
   if (s && s.length >= 16) return s;
@@ -24,21 +38,12 @@ function sign(payload: string): string {
   return `${payload}.${h}`;
 }
 
-/**
- * Durable revocation store backed by PostgreSQL.
- *
- * Each logout inserts the token's jti + expiry into `revoked_sessions`.
- * Every verify() call checks the table so revocations survive restarts,
- * redeploys, and multi-instance scale-out.
- *
- * The table is created on first use (CREATE TABLE IF NOT EXISTS) so no
- * separate migration step is required after deploy.
- */
 let tableReady: Promise<void> | null = null;
 
 function ensureTable(): Promise<void> {
+  if (!DB_AVAILABLE) return Promise.resolve();
   if (!tableReady) {
-    tableReady = pool
+    tableReady = pool!
       .query(
         `CREATE TABLE IF NOT EXISTS revoked_sessions (
           jti        TEXT    PRIMARY KEY,
@@ -54,28 +59,22 @@ function ensureTable(): Promise<void> {
   return tableReady;
 }
 
-setInterval(async () => {
-  try {
-    await ensureTable();
-    await pool.query("DELETE FROM revoked_sessions WHERE expires_at <= $1", [Date.now()]);
-  } catch {
-    /* ignore periodic cleanup errors */
-  }
-}, 60 * 60 * 1000).unref();
+if (DB_AVAILABLE) {
+  setInterval(async () => {
+    try {
+      await ensureTable();
+      await pool!.query("DELETE FROM revoked_sessions WHERE expires_at <= $1", [Date.now()]);
+    } catch {
+      /* ignore periodic cleanup errors */
+    }
+  }, 60 * 60 * 1000).unref();
+}
 
 interface ParsedToken {
   jti: string;
   expiresAt: number;
 }
 
-/**
- * Verify the HMAC signature, expiry, and password version of a token
- * without touching the database. Returns the parsed fields on success
- * or null if the token is structurally invalid or expired.
- *
- * This is intentionally DB-free so logout can always obtain the JTI
- * needed for revocation even during database outages.
- */
 function parseToken(token: string | undefined): ParsedToken | null {
   if (!token) return null;
   const dotIndex = token.lastIndexOf(".");
@@ -99,15 +98,20 @@ async function verify(token: string | undefined): Promise<{ valid: boolean } & P
   const parsed = parseToken(token);
   if (!parsed) return { valid: false };
   const { jti, expiresAt } = parsed;
+
+  if (!DB_AVAILABLE) {
+    /* No database — use in-memory revocation store */
+    if (memRevoked.has(jti)) return { valid: false };
+    return { valid: true, jti, expiresAt };
+  }
+
   try {
     await ensureTable();
-    const result = await pool.query<{ jti: string }>(
+    const result = await pool!.query<{ jti: string }>(
       "SELECT jti FROM revoked_sessions WHERE jti = $1 AND expires_at > $2",
       [jti, Date.now()],
     );
-    if (result.rows.length > 0) {
-      return { valid: false };
-    }
+    if (result.rows.length > 0) return { valid: false };
   } catch {
     return { valid: false };
   }
@@ -129,24 +133,25 @@ export function issueSession(res: Response): void {
 }
 
 export async function clearSession(req: Request, res: Response): Promise<void> {
-  // Always clear the browser cookie first so the client loses access
-  // immediately, even if the durable revocation write fails or the DB is down.
   res.clearCookie(COOKIE_NAME, { path: "/" });
 
   const cookies = (req as Request & { cookies?: Record<string, string> }).cookies ?? {};
   const token = cookies[COOKIE_NAME];
-  if (token) {
-    const parsed = parseToken(token);
-    if (parsed) {
-      // May throw if the DB is unavailable; the caller handles the error,
-      // but the cookie has already been cleared above.
-      await ensureTable();
-      await pool.query(
-        "INSERT INTO revoked_sessions (jti, expires_at) VALUES ($1, $2) ON CONFLICT DO NOTHING",
-        [parsed.jti, parsed.expiresAt],
-      );
-    }
+  if (!token) return;
+
+  const parsed = parseToken(token);
+  if (!parsed) return;
+
+  if (!DB_AVAILABLE) {
+    memRevoked.set(parsed.jti, parsed.expiresAt);
+    return;
   }
+
+  await ensureTable();
+  await pool!.query(
+    "INSERT INTO revoked_sessions (jti, expires_at) VALUES ($1, $2) ON CONFLICT DO NOTHING",
+    [parsed.jti, parsed.expiresAt],
+  );
 }
 
 export async function isAuthed(req: Request): Promise<boolean> {
