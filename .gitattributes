@@ -9,3 +9,4 @@ ScreenRecording_11-28-2025[[:space:]]21-47-31_1[[:space:]]copy[[:space:]]3.mp4 f
 ScreenRecording_11-28-2025[[:space:]]21-47-31_1[[:space:]]copy.mp4 filter=lfs diff=lfs merge=lfs -text
 artifacts/nafsam/public/media/IMG_4827.MOV filter=lfs diff=lfs merge=lfs -text
 artifacts/api-server/private/media/IMG_4827.MOV filter=lfs diff=lfs merge=lfs -text
+IMG_0240.mov filter=lfs diff=lfs merge=lfs -text
