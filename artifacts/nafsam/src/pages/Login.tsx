@@ -4,17 +4,8 @@ import { type Translations, type Lang } from "@/i18n/translations";
 import usePageAudio from "@/hooks/usePageAudio";
 import { fetchSession, login, type SessionCard } from "@/lib/auth";
 
-const USERS = [
-  { value: "", label: "\u2014\u2014\u2014\u2014" },
-  { value: "nafas", label: "nafas" },
-  { value: "Nafasm", label: "Nafasm" },
-  { value: "Ech", label: "Ech" },
-  { value: "Ska", label: "Ska" },
-  { value: "ech", label: "ech" },
-  { value: "ska", label: "ska" },
-  { value: "kaar", label: "kaar" },
-  { value: "Kaar", label: "Kaar" },
-];
+// The login UI intentionally does NOT ship any answer identifiers to the client.
+// All validation is server-side via the NAFSAM_PASSWORDS env var.
 
 interface TimeParts {
   days: number;
@@ -198,21 +189,19 @@ export default function Login({ t, lang, onAuth }: Props) {
         </div>
 
         <form className="login-form" onSubmit={handleSubmit}>
-          <label className="sr-only" htmlFor="login-user">{t.login_input}</label>
-          <select
-            id="login-user"
+          <label className="sr-only" htmlFor="login-answer">{t.login_input}</label>
+          <input
+            id="login-answer"
+            type="text"
             value={selectedUser}
             onChange={(e) => setSelectedUser(e.target.value)}
+            placeholder={t.login_input}
             className="login-select"
             disabled={submitting || !isOpen}
-          >
-            {USERS.map((u) => (
-              <option key={u.value} value={u.value}>
-                {u.label}
-              </option>
-            ))}
-          </select>
-          <button type="submit" className="btn btn-primary login-btn" disabled={submitting || !selectedUser}>
+            autoComplete="off"
+            spellCheck={false}
+          />
+          <button type="submit" className="btn btn-primary login-btn" disabled={submitting || !selectedUser.trim()}>
             {t.login_button}
           </button>
         </form>

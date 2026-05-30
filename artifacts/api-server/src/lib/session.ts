@@ -22,10 +22,7 @@ setInterval(pruneMemRevoked, 60 * 60 * 1000).unref();
 function getSecret(): string {
   const s = process.env.NAFSAM_SESSION_SECRET;
   if (s && s.length >= 16) return s;
-  if (process.env.NODE_ENV === "production") {
-    throw new Error("NAFSAM_SESSION_SECRET env var is required in production");
-  }
-  return "dev-only-insecure-session-secret-change-me";
+  throw new Error("NAFSAM_SESSION_SECRET env var must be set (>= 16 chars)");
 }
 
 function getPasswordVersion(): string {

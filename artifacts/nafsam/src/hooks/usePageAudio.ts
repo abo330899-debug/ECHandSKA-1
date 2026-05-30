@@ -116,19 +116,8 @@ export default function usePageAudio(songFile: string) {
       window.removeEventListener(PAGE_AUDIO_RESUME_EVENT, onExternalResume);
       const dyingAudio = audio;
       cancelFade();
-      const startVol = dyingAudio.volume;
-      const startTime = performance.now();
-      const fadeOut = (now: number) => {
-        const t = Math.min(1, (now - startTime) / FADE_OUT_MS);
-        dyingAudio.volume = Math.max(0, startVol * (1 - t));
-        if (t < 1) {
-          requestAnimationFrame(fadeOut);
-        } else {
-          dyingAudio.pause();
-          dyingAudio.src = "";
-        }
-      };
-      requestAnimationFrame(fadeOut);
+      dyingAudio.pause();
+      dyingAudio.src = "";
       audioRef.current = null;
     };
   }, [songFile]);

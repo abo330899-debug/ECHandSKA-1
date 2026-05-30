@@ -1,41 +1,22 @@
 import express, { Router, type IRouter } from "express";
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
+import { requireAuth } from "../lib/session";
+import { loadContent } from "./private";
 
 const router: IRouter = Router();
 
-const PRIVATE_ROOT = (() => {
-  const candidates = [
-    path.resolve(process.cwd(), "private"),
-    path.resolve(process.cwd(), "artifacts/api-server/private"),
-  ];
-  try {
-    candidates.push(
-      path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "private"),
-    );
-  } catch {
-    /* ignore */
+const R2_BASE = (() => {
+  const env = process.env.NAFSAM_R2_BASE;
+  if (env) return env;
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("NAFSAM_R2_BASE env var is required in production");
   }
-  for (const c of candidates) {
-    if (fs.existsSync(c)) return c;
-  }
-  return candidates[0];
+  return "https://pub-79afa43f557e4c6291aeea28eb12043e.r2.dev";
 })();
 
-const CONTENT_FILE = path.resolve(PRIVATE_ROOT, "content.json");
-const R2_BASE = "https://pub-79afa43f557e4c6291aeea28eb12043e.r2.dev";
-
-function loadContent(): Record<string, unknown> {
-  try {
-    return JSON.parse(fs.readFileSync(CONTENT_FILE, "utf-8")) as Record<string, unknown>;
-  } catch {
-    return {};
-  }
-}
-
-router.get("/reorder", (_req, res) => {
-  const content = loadContent();
+router.get("/reorder", requireAuth, (_req, res) => {
+  const content = loadContent() as Record<string, unknown>;
   const photos = (content.photos as string[] | undefined) ?? [];
   const captions = (
     (content.captions as Record<string, unknown> | undefined)?.ar as
@@ -213,22 +194,18 @@ render();
   res.send(html);
 });
 
-router.post("/reorder", express.json(), (req, res) => {
+router.post("/reorder", requireAuth, express.json(), async (req, res) => {
   const { photos } = req.body as { photos?: unknown };
   if (!Array.isArray(photos) || photos.some((p) => typeof p !== "string")) {
     res.status(400).json({ error: "invalid_photos" });
     return;
   }
 
-  let content: Record<string, unknown>;
-  try {
-    content = JSON.parse(fs.readFileSync(CONTENT_FILE, "utf-8")) as Record<string, unknown>;
-  } catch {
-    res.status(500).json({ error: "cannot_read_content" });
-    return;
-  }
-
+  const content = loadContent() as Record<string, unknown>;
   content.photos = photos as string[];
+
+  const { PRIVATE_ROOT } = await import("./private");
+  const CONTENT_FILE = path.resolve(PRIVATE_ROOT, "content.json");
 
   try {
     fs.writeFileSync(CONTENT_FILE, JSON.stringify(content, null, 2), "utf-8");

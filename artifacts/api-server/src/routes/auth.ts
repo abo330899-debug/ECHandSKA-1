@@ -11,10 +11,6 @@ const DEFAULT_OPEN_AT = "2026-05-29T17:00:00";
  * is absent in production the server will reject every login attempt with a
  * 500 so the misconfiguration is immediately visible.
  */
-const DEFAULT_PASSWORDS = [
-  "nafas", "nafasm", "ech", "ska", "kaar",
-];
-
 function getPasswords(): string[] {
   const raw = process.env.NAFSAM_PASSWORDS ?? "";
   const envList = raw
@@ -27,10 +23,10 @@ function getPasswords(): string[] {
         ),
       )
     : [];
-  if (process.env.NODE_ENV === "production" && !raw) {
+  if (process.env.NODE_ENV === "production" && envList.length === 0) {
     throw new Error("NAFSAM_PASSWORDS env var must be set in production");
   }
-  return Array.from(new Set([...DEFAULT_PASSWORDS, ...envList]));
+  return envList;
 }
 
 function getOpenAt(): number {
@@ -84,6 +80,13 @@ function originAllowed(req: Request): boolean {
 const recentAttempts = new Map<string, { count: number; firstAt: number }>();
 const ATTEMPT_WINDOW_MS = 60_000;
 const MAX_ATTEMPTS = 8;
+
+function getClientIP(req: Request): string {
+  // Express "trust proxy" is enabled in production, so req.ip is the
+  // leftmost trusted address after proxy hops. We trust that over raw
+  // x-forwarded-for to avoid header spoofing.
+  return (req.ip || req.socket.remoteAddress || "unknown").toString();
+}
 
 function rateLimited(ip: string): boolean {
   const now = Date.now();
@@ -210,7 +213,7 @@ router.post("/auth/login", (req, res) => {
     return;
   }
 
-  const ip = (req.ip || req.socket.remoteAddress || "unknown").toString();
+  const ip = getClientIP(req);
   if (rateLimited(ip)) {
     res.status(429).json({ error: "rate_limited" });
     return;

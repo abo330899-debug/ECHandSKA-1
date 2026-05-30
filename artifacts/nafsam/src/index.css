@@ -1007,10 +1007,7 @@ main{flex:1}
 .login-input:focus{
   border-color:var(--pink);
 }
-.login-select option{
-  background:#0b0f1e;
-  color:var(--text);
-}
+/* login-select was removed; replaced with plain text input for security */
 .login-btn{
   min-width:160px;
 }

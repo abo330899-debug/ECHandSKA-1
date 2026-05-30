@@ -93,7 +93,7 @@ function AppContent() {
       });
       refresh(wasAuthed);
       if (wasAuthed) revalidatePrivateContent();
-    }, 30_000);
+    }, 60_000);
 
     const onVisibility = () => {
       if (document.visibilityState === "visible") {

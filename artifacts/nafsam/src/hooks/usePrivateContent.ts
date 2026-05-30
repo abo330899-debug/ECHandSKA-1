@@ -173,7 +173,10 @@ async function loadPrivateContent(): Promise<PrivateContent | null> {
         }
         return data;
       })
-      .catch(() => null)
+      .catch((err) => {
+        console.error("[usePrivateContent] static load failed:", err);
+        return null;
+      })
       .finally(() => { inflight = null; });
     return inflight;
   }
@@ -197,7 +200,10 @@ async function loadPrivateContent(): Promise<PrivateContent | null> {
       }
       return data;
     })
-    .catch(() => null)
+    .catch((err) => {
+      console.error("[usePrivateContent] api load failed:", err);
+      return null;
+    })
     .finally(() => {
       inflight = null;
     });
@@ -215,7 +221,7 @@ export function clearPrivateContentCache(): void {
  * Probe /api/private/content with a no-store request, bypassing the module
  * cache, to detect server-side session revocation while the tab is open.
  *
- * Called by App.tsx on the same 5-second interval used for session polling so
+ * Called by App.tsx on the same 60-second interval used for session polling so
  * that a 401 triggers immediate local eviction rather than waiting for the
  * session poll to catch the revocation separately.
  *

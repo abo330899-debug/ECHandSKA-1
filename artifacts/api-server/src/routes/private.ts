@@ -5,7 +5,7 @@ import { requireAuth } from "../lib/session";
 
 const router: IRouter = Router();
 
-const PRIVATE_ROOT = (() => {
+export const PRIVATE_ROOT = (() => {
   const candidates = [
     path.resolve(process.cwd(), "private"),
     path.resolve(process.cwd(), "artifacts/api-server/private"),
@@ -30,10 +30,11 @@ function sendPrivate(
     res.status(400).json({ error: "no_file" });
     return;
   }
-  const safeRel = rel.replace(/\\/g, "/").replace(/\.\.+/g, "");
+  const safeRel = path.normalize(rel.replace(/\\/g, "/"));
   const target = path.resolve(PRIVATE_ROOT, dir, safeRel);
-  const base = path.resolve(PRIVATE_ROOT, dir) + path.sep;
-  if (!target.startsWith(base)) {
+  const base = path.resolve(PRIVATE_ROOT, dir);
+  const relToBase = path.relative(base, target);
+  if (relToBase.startsWith("..") || relToBase === "" || path.isAbsolute(relToBase)) {
     res.status(400).json({ error: "bad_path" });
     return;
   }
@@ -186,7 +187,7 @@ function getDefaultSongs(): SongItem[] {
 }
 
 let contentCache: unknown | null = null;
-function loadContent(): unknown {
+export function loadContent(): unknown {
   if (contentCache) return contentCache;
   const file = path.resolve(PRIVATE_ROOT, "content.json");
   let base: Record<string, unknown> = { writings: {}, captions: {}, farewell: {} };
