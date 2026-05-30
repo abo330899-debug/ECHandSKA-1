@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { mediaUrl, STATIC_MODE } from "@/lib/r2";
+import { mediaUrl } from "@/lib/r2";
 
 const BASE = import.meta.env.BASE_URL;
 
