@@ -103,4 +103,5 @@ externalPort = 6800
 [userenv]
 
 [userenv.shared]
+NAFSAM_PASSWORDS = "ech,ECH,SKA,Ska,Ech,nafasm,nafas,Nafasm,Nafas,Nafasim,Star1996@"
   
