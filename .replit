@@ -19,7 +19,27 @@ publicDir = "dist"
   env = { "CI" = "true" }
 
 [workflows]
-  runButton = "Project"
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Auto Push to GitHub"
+
+[[workflows.workflow]]
+name = "Auto Push to GitHub"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "bash /home/runner/workspace/watch-and-push.sh"
+
+[workflows.workflow.metadata]
+outputType = "console"
 
 [agent]
   stack = "PNPM_WORKSPACE"
