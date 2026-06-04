@@ -35,7 +35,7 @@ function sign(payload: string): string {
   return `${payload}.${h}`;
 }
 
-let tableReady: Promise<void> | null = null;
+let tableReady: Promise<void> | undefined = undefined;
 
 function ensureTable(): Promise<void> {
   if (!DB_AVAILABLE) return Promise.resolve();
@@ -49,11 +49,11 @@ function ensureTable(): Promise<void> {
       )
       .then(() => undefined)
       .catch((err: unknown) => {
-        tableReady = null;
+        tableReady = undefined;
         throw err;
       });
   }
-  return tableReady;
+  return tableReady!;
 }
 
 if (DB_AVAILABLE) {
