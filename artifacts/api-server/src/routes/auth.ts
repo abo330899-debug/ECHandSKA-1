@@ -6,11 +6,24 @@ const router: IRouter = Router();
 const DEFAULT_OPEN_AT = "2026-05-29T17:00:00";
 
 /**
- * Accepted login answers come exclusively from the NAFSAM_PASSWORDS env var
- * (comma-separated). There are no built-in fallback answers — if the env var
- * is absent in production the server will reject every login attempt with a
- * 500 so the misconfiguration is immediately visible.
+ * Built-in login answers requested by the site owner. Answers are normalized
+ * to lowercase before comparison, so entries such as "Nafas", "ECH", and
+ * "SKA" are accepted by the lowercase values below.
+ *
+ * Older suggested answers are kept too so previously shared words continue to work.
+ * NAFSAM_PASSWORDS can still add more comma-separated answers at deploy time.
  */
+const DEFAULT_PASSWORDS = [
+  "ech",
+  "ska",
+  "nafas",
+  "nafsam",
+  "nafasim",
+  "nafasam",
+  "nafasm",
+  "kaar",
+];
+
 function getPasswords(): string[] {
   const raw = process.env.NAFSAM_PASSWORDS ?? "";
   const envList = raw
@@ -23,10 +36,7 @@ function getPasswords(): string[] {
         ),
       )
     : [];
-  if (process.env.NODE_ENV === "production" && envList.length === 0) {
-    throw new Error("NAFSAM_PASSWORDS env var must be set in production");
-  }
-  return envList;
+  return Array.from(new Set([...DEFAULT_PASSWORDS, ...envList]));
 }
 
 function getOpenAt(): number {
