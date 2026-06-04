@@ -10,9 +10,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Deploy to Cloudflare Pages
-    env:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN || secrets.CF_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || secrets.CF_ACCOUNT_ID }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,25 +28,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build project
-        run: pnpm run build
-
-      - name: Verify Cloudflare credentials
-        run: |
-          missing=0
-          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
-            echo "::error::Missing Cloudflare API token. Add CLOUDFLARE_API_TOKEN (or CF_API_TOKEN) in GitHub repository Secrets."
-            missing=1
-          fi
-          if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
-            echo "::error::Missing Cloudflare account ID. Add CLOUDFLARE_ACCOUNT_ID (or CF_ACCOUNT_ID) in GitHub repository Secrets."
-            missing=1
-          fi
-          exit "$missing"
+      - name: Build nafsam
+        run: pnpm --filter @workspace/nafsam run build
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ env.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy artifacts/nafsam/dist/public --project-name=echandska-1
+        run: |
+          pnpm dlx wrangler@3.90.0 pages deploy artifacts/nafsam/dist/public --project-name=echandska-1
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN || secrets.CF_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || secrets.CF_ACCOUNT_ID }}
