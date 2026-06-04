@@ -14,22 +14,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js (if needed)
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install dependencies (if package.json exists)
-        run: |
-          if [ -f "package.json" ]; then
-            npm install
-          fi
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.26.1
 
-      - name: Build project (if build script exists)
-        run: |
-          if [ -f "package.json" ] && cat package.json | grep -q '"build"'; then
-            npm run build
-          fi
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build project
+        run: pnpm run build
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
