@@ -15,6 +15,7 @@ export function posterUrl(file: string): string {
 }
 
 export function imageUrl(rel: string): string {
+  if (/^https?:\/\//i.test(rel)) return rel;
   const encoded = rel.split("/").map(encodeURIComponent).join("/");
   if (STATIC_MODE) return `${R2_BASE}/images/${encoded}`;
   return `/api/private/images/${encoded}`;
