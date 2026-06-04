@@ -1,0 +1,37 @@
+{
+  "mediaConfig": {
+    "photosDir": "all_photos"
+  },
+  "specialPhotos": [
+    {
+      "file": "https://pub-79afa43f557e4c6291aeea28eb12043e.r2.dev/images/all_photos/photo-embrace-1.jpg"
+    },
+    {
+      "file": "https://pub-79afa43f557e4c6291aeea28eb12043e.r2.dev/images/all_photos/photo-embrace-2.jpg"
+    },
+    {
+      "file": "https://pub-79afa43f557e4c6291aeea28eb12043e.r2.dev/images/all_photos/photo-embrace-3.jpg"
+    },
+    {
+      "file": "https://pub-79afa43f557e4c6291aeea28eb12043e.r2.dev/images/all_photos/photo-embrace-4.jpg",
+      "featured": true
+    }
+  ],
+  "photos": [
+    "IMG_0172_1780082102830.jpeg",
+    "IMG_0192_1780082102830.jpeg",
+    "IMG_0193_1780082102830.jpeg",
+    "IMG_0194_1780082102829.jpeg",
+    "IMG_0195_1780082102829.jpeg",
+    "IMG_0196_1780082102829.jpeg",
+    "IMG_0197_1780082102830.jpeg",
+    "IMG_0199_1780082102830.jpeg",
+    "IMG_0200_1780082102829.jpeg",
+    "IMG_0202_1780082102829.jpeg",
+    "IMG_0204_1780082102829.jpeg",
+    "https://pub-79afa43f557e4c6291aeea28eb12043e.r2.dev/images/all_photos/photo-embrace-1.jpg",
+    "https://pub-79afa43f557e4c6291aeea28eb12043e.r2.dev/images/all_photos/photo-embrace-2.jpg",
+    "https://pub-79afa43f557e4c6291aeea28eb12043e.r2.dev/images/all_photos/photo-embrace-3.jpg",
+    "https://pub-79afa43f557e4c6291aeea28eb12043e.r2.dev/images/all_photos/photo-embrace-4.jpg"
+  ]
+}

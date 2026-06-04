@@ -42,6 +42,15 @@ function pad2(n: number) {
   return n < 10 ? `0${n}` : String(n);
 }
 
+function isAbsoluteUrl(value: string): boolean {
+  return /^https?:\/\//i.test(value);
+}
+
+function photoSource(name: string, photosDir: string): string {
+  if (isAbsoluteUrl(name)) return privateImage(name);
+  return photosDir ? privateImage(`${photosDir}/${name}`) : "";
+}
+
 const SPECIAL_PHOTO_TEXT_KEYS = [
   "photo1_text",
   "photo2_text",
@@ -105,7 +114,7 @@ export default function Photos({ t, lang }: Props) {
     if (!data || !photosDir) return;
     const all = (data.photos ?? [])
       .slice(0, 6)
-      .map((n) => privateImage(`${photosDir}/${n}`));
+      .map((n) => photoSource(n, photosDir));
     prefetchImages(all);
   }, [data, photosDir]);
 
@@ -124,7 +133,7 @@ export default function Photos({ t, lang }: Props) {
   const albumPhotos = allPhotos.map((name, i) => {
     const story = i < captions.length ? captions[i] : null;
     return {
-      src: photosDir ? privateImage(`${photosDir}/${name}`) : "",
+      src: photoSource(name, photosDir),
       title: story?.title ?? null,
       text: story?.text ?? t.photos_fallback_caption,
     };
