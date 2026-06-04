@@ -34,7 +34,7 @@ function sign(payload: string): string {
  * The table is created on first use (CREATE TABLE IF NOT EXISTS) so no
  * separate migration step is required after deploy.
  */
-let tableReady: Promise<void> | null = null;
+let tableReady: Promise<void> | undefined = undefined;
 
 function ensureTable(): Promise<void> {
   if (!tableReady) {
@@ -47,11 +47,11 @@ function ensureTable(): Promise<void> {
       )
       .then(() => undefined)
       .catch((err: unknown) => {
-        tableReady = null;
+        tableReady = undefined;
         throw err;
       });
   }
-  return tableReady;
+  return tableReady!;
 }
 
 setInterval(async () => {
