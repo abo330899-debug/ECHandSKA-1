@@ -3,6 +3,7 @@ import { StrictMode } from "react";
 import App from "./App";
 import LoadingVeil from "./components/LoadingVeil";
 import "./index.css";
+import "./polished-overrides.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
