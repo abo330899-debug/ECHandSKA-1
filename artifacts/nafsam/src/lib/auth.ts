@@ -170,16 +170,25 @@ export function broadcastLogout(): void {
 
 export async function logout(): Promise<void> {
   if (STATIC_MODE) {
-    try { localStorage.removeItem(STATIC_TOKEN_KEY); } catch { /* ignore */ }
+    try {
+      localStorage.removeItem(STATIC_TOKEN_KEY);
+    } catch {
+      /* ignore */
+    }
     onLogoutCleanup();
     broadcastLogout();
     return;
   }
+
   onLogoutCleanup();
-  const res = await fetch("/api/auth/logout", {
-    method: "POST",
-    credentials: "same-origin",
-  });
-  if (!res.ok) throw new Error("logout_failed");
-  broadcastLogout();
+  try {
+    const res = await fetch("/api/auth/logout", {
+      method: "POST",
+      credentials: "same-origin",
+    });
+    if (!res.ok) throw new Error("logout_failed");
+  } finally {
+    // Keep all open tabs in sync even when the network request fails.
+    broadcastLogout();
+  }
 }
