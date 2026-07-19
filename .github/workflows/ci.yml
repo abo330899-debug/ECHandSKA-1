@@ -37,7 +37,26 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --reporter=append-only
 
       - name: Type-check and build
-        run: pnpm run build
+        shell: bash
+        run: |
+          set +e
+          pnpm run build > build.log 2>&1
+          status=$?
+          if [ "$status" -eq 0 ]; then
+            echo "Build completed successfully."
+          else
+            echo "Build failed. The complete output is attached as the build-log artifact."
+          fi
+          exit "$status"
+
+      - name: Upload failed build log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+          if-no-files-found: warn
+          retention-days: 7
