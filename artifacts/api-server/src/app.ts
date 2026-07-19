@@ -24,6 +24,28 @@ if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", true);
 }
 
+const allowedOrigins = new Set<string>();
+
+function addAllowedOrigins(raw: string | undefined): void {
+  for (const value of (raw ?? "").split(",")) {
+    const trimmed = value.trim();
+    if (!trimmed) continue;
+
+    try {
+      const origin = trimmed.includes("://")
+        ? new URL(trimmed).origin
+        : new URL(`https://${trimmed}`).origin;
+      allowedOrigins.add(origin);
+    } catch {
+      logger.warn({ origin: trimmed }, "Ignoring invalid allowed origin");
+    }
+  }
+}
+
+addAllowedOrigins(process.env.REPLIT_DOMAINS);
+addAllowedOrigins(process.env.REPLIT_DEV_DOMAIN);
+addAllowedOrigins(process.env.ALLOWED_ORIGINS);
+
 app.use(
   pinoHttp({
     logger,
@@ -47,16 +69,7 @@ app.use(
   cors({
     credentials: true,
     origin(origin, callback) {
-      if (!origin) return callback(null, true);
-      const allowed = new Set<string>();
-      const domains = process.env.REPLIT_DOMAINS ?? "";
-      for (const d of domains.split(",")) {
-        const t = d.trim();
-        if (t) allowed.add(`https://${t}`);
-      }
-      const devDomain = process.env.REPLIT_DEV_DOMAIN ?? "";
-      if (devDomain) allowed.add(`https://${devDomain}`);
-      if (allowed.has(origin)) return callback(null, true);
+      if (!origin || allowedOrigins.has(origin)) return callback(null, true);
       if (
         process.env.NODE_ENV !== "production" &&
         (origin.startsWith("http://localhost") ||
