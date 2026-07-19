@@ -8,6 +8,14 @@ import Footer from "@/components/Footer";
 import PhotoBackdrop from "@/components/PhotoBackdrop";
 import usePageAudio from "@/hooks/usePageAudio";
 import { usePrivateContent, pickLangPages } from "@/hooks/usePrivateContent";
+import {
+  ArrowUpRight,
+  Images,
+  Music2,
+  PenLine,
+  Route as RouteIcon,
+  Sparkles,
+} from "lucide-react";
 
 const START = new Date("2025-08-20T04:04:00");
 
@@ -60,17 +68,51 @@ export default function Home({ t, lang }: Props) {
     };
   }, [heroImage]);
 
+  const cards = [
+    {
+      href: "/journey",
+      title: t.card_moments_title,
+      text: p.card_moments_text,
+      icon: RouteIcon,
+    },
+    {
+      href: "/photos",
+      title: t.card_photos_title,
+      text: p.card_photos_text,
+      icon: Images,
+    },
+    {
+      href: "/songs",
+      title: t.card_songs_title,
+      text: p.card_songs_text,
+      icon: Music2,
+    },
+    {
+      href: "/writings",
+      title: t.card_writings_title,
+      text: p.card_writings_text,
+      icon: PenLine,
+    },
+  ];
+
   return (
-    <div className="page-content">
+    <div className="page-content home-page-premium">
       <PhotoBackdrop />
-      <section className="hero">
+      <section className="hero hero-premium">
         <div
           className="hero-bg"
           style={heroImage ? { backgroundImage: `url(${heroImage})` } : {}}
         />
         <div className="hero-overlay" />
-        <div className="hero-body">
-          <span className="eyebrow">{t.hero_eyebrow}</span>
+        <div className="hero-orb hero-orb-one" aria-hidden="true" />
+        <div className="hero-orb hero-orb-two" aria-hidden="true" />
+
+        <div className="hero-body hero-panel">
+          <div className="hero-kicker">
+            <Sparkles size={15} strokeWidth={1.8} aria-hidden="true" />
+            <span className="eyebrow">{t.hero_eyebrow}</span>
+          </div>
+
           <TypewriterTitle text={t.hero_title} />
 
           {p.farewell_title && (
@@ -88,26 +130,34 @@ export default function Home({ t, lang }: Props) {
               lang={lang}
             />
           )}
-          <div className="elapsed-counter">
+
+          <div className="elapsed-counter elapsed-counter-premium">
             <span>
-              {el.days} {t.countdown_day}
+              <strong>{el.days}</strong>
+              <small>{t.countdown_day}</small>
             </span>
             <span>
-              {el.hrs} {t.countdown_hour}
+              <strong>{el.hrs}</strong>
+              <small>{t.countdown_hour}</small>
             </span>
             <span>
-              {el.mins} {t.countdown_minute}
+              <strong>{el.mins}</strong>
+              <small>{t.countdown_minute}</small>
             </span>
             <span>
-              {el.secs} {t.countdown_second}
+              <strong>{el.secs}</strong>
+              <small>{t.countdown_second}</small>
             </span>
           </div>
-          <div className="hero-buttons">
-            <Link href="/journey" className="btn btn-primary">
-              {t.open_story}
+
+          <div className="hero-buttons hero-actions">
+            <Link href="/journey" className="btn btn-primary premium-button">
+              <RouteIcon size={18} strokeWidth={1.8} aria-hidden="true" />
+              <span>{t.open_story}</span>
             </Link>
-            <Link href="/writings" className="btn btn-outline">
-              {t.read_pain}
+            <Link href="/writings" className="btn btn-outline premium-button">
+              <PenLine size={18} strokeWidth={1.8} aria-hidden="true" />
+              <span>{t.read_pain}</span>
             </Link>
           </div>
         </div>
@@ -123,26 +173,35 @@ export default function Home({ t, lang }: Props) {
         />
       )}
 
-      <section className="cards-section">
-        <div className="cards-grid">
-          <Link href="/journey" className="card glass">
-            <h3>{t.card_moments_title}</h3>
-            {p.card_moments_text && <p>{p.card_moments_text}</p>}
-          </Link>
-          <Link href="/photos" className="card glass">
-            <h3>{t.card_photos_title}</h3>
-            {p.card_photos_text && <p>{p.card_photos_text}</p>}
-          </Link>
-          <Link href="/songs" className="card glass">
-            <h3>{t.card_songs_title}</h3>
-            {p.card_songs_text && <p>{p.card_songs_text}</p>}
-          </Link>
-          <Link href="/writings" className="card glass">
-            <h3>{t.card_writings_title}</h3>
-            {p.card_writings_text && <p>{p.card_writings_text}</p>}
-          </Link>
+      <section className="cards-section premium-cards-section">
+        <div className="section-intro-mark" aria-hidden="true">
+          <Sparkles size={17} strokeWidth={1.8} />
+        </div>
+        <div className="cards-grid premium-cards-grid">
+          {cards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <Link
+                key={card.href}
+                href={card.href}
+                className="card glass premium-card"
+              >
+                <span className="premium-card-icon" aria-hidden="true">
+                  <Icon size={25} strokeWidth={1.7} />
+                </span>
+                <div className="premium-card-copy">
+                  <h3>{card.title}</h3>
+                  {card.text && <p>{card.text}</p>}
+                </div>
+                <span className="premium-card-arrow" aria-hidden="true">
+                  <ArrowUpRight size={18} strokeWidth={1.8} />
+                </span>
+              </Link>
+            );
+          })}
         </div>
       </section>
+
       {p.footer_text && <Footer text={p.footer_text} />}
     </div>
   );
