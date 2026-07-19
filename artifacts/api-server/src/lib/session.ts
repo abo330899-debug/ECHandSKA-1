@@ -39,21 +39,23 @@ let tableReady: Promise<void> | null = null;
 
 function ensureTable(): Promise<void> {
   if (!DB_AVAILABLE) return Promise.resolve();
-  if (!tableReady) {
-    tableReady = pool!
-      .query(
-        `CREATE TABLE IF NOT EXISTS revoked_sessions (
-          jti        TEXT    PRIMARY KEY,
-          expires_at BIGINT  NOT NULL
-        )`,
-      )
-      .then(() => undefined)
-      .catch((err: unknown) => {
-        tableReady = null;
-        throw err;
-      });
-  }
-  return tableReady;
+  if (tableReady) return tableReady;
+
+  const initialization = pool!
+    .query(
+      `CREATE TABLE IF NOT EXISTS revoked_sessions (
+        jti        TEXT    PRIMARY KEY,
+        expires_at BIGINT  NOT NULL
+      )`,
+    )
+    .then(() => undefined)
+    .catch((err: unknown) => {
+      tableReady = null;
+      throw err;
+    });
+
+  tableReady = initialization;
+  return initialization;
 }
 
 if (DB_AVAILABLE) {
