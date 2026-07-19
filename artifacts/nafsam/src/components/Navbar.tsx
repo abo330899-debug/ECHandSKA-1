@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { type Translations, type Lang } from "@/i18n/translations";
 import { useChat } from "@/chat/chatContext";
 import {
-  Home,
+  House,
   Images,
   Route as RouteIcon,
   Music2,
@@ -11,7 +11,7 @@ import {
   Heart,
   MessageCircle,
   LogOut,
-  Sparkles,
+  BookHeart,
   type LucideIcon,
 } from "lucide-react";
 
@@ -33,7 +33,7 @@ export default function Navbar({ t, onLogout }: Props) {
   const { unread, configured } = useChat();
 
   const links: NavItem[] = [
-    { href: "/home", label: t.nav_home, icon: Home },
+    { href: "/home", label: t.nav_home, icon: House },
     { href: "/photos", label: t.nav_photos, icon: Images },
     { href: "/journey", label: t.nav_journey, icon: RouteIcon },
     { href: "/songs", label: t.nav_songs, icon: Music2 },
@@ -53,17 +53,18 @@ export default function Navbar({ t, onLogout }: Props) {
   ];
 
   return (
-    <nav className="nav nav-premium glass" aria-label="Main navigation">
-      <div className="nav-top">
-        <Link href="/home" className="brand brand-premium" aria-label={t.brand}>
-          <span className="brand-mark" aria-hidden="true">
-            <Sparkles size={16} strokeWidth={1.8} />
-          </span>
-          <span className="brand-text">{t.brand}</span>
-        </Link>
-      </div>
+    <nav className="memory-nav" aria-label="Main navigation">
+      <Link href="/home" className="memory-nav-brand" aria-label={t.brand}>
+        <span className="memory-nav-seal" aria-hidden="true">
+          <BookHeart size={18} strokeWidth={1.55} />
+        </span>
+        <span className="memory-nav-brand-copy">
+          <strong>{t.brand}</strong>
+          <small aria-hidden="true">Private archive</small>
+        </span>
+      </Link>
 
-      <div className="links nav-links">
+      <div className="memory-nav-track">
         {links.map((item) => {
           const Icon = item.icon;
           const active = location === item.href;
@@ -72,35 +73,33 @@ export default function Navbar({ t, onLogout }: Props) {
             <Link
               key={item.href}
               href={item.href}
-              className={`nav-link${active ? " active" : ""}`}
+              className={`memory-nav-item${active ? " is-active" : ""}`}
               aria-current={active ? "page" : undefined}
               aria-label={item.label}
             >
-              <span className="nav-icon" aria-hidden="true">
-                <Icon size={17} strokeWidth={1.8} />
+              <span className="memory-nav-icon" aria-hidden="true">
+                <Icon size={17} strokeWidth={1.65} />
               </span>
-              <span className="nav-label">{item.label}</span>
+              <span className="memory-nav-label">{item.label}</span>
               {item.chat && unread > 0 && location !== "/chat" && (
-                <span className="nav-chat-badge">
+                <span className="memory-nav-badge">
                   {unread > 99 ? "99+" : unread}
                 </span>
               )}
             </Link>
           );
         })}
-
-        <button
-          className="nav-logout nav-link"
-          onClick={onLogout}
-          type="button"
-          aria-label={t.nav_logout}
-        >
-          <span className="nav-icon" aria-hidden="true">
-            <LogOut size={17} strokeWidth={1.8} />
-          </span>
-          <span className="nav-label">{t.nav_logout}</span>
-        </button>
       </div>
+
+      <button
+        className="memory-nav-logout"
+        onClick={onLogout}
+        type="button"
+        aria-label={t.nav_logout}
+      >
+        <LogOut size={17} strokeWidth={1.65} aria-hidden="true" />
+        <span>{t.nav_logout}</span>
+      </button>
     </nav>
   );
 }
