@@ -4,6 +4,7 @@ import App from "./App";
 import LoadingVeil from "./components/LoadingVeil";
 import "./index.css";
 import "./polished-overrides.css";
+import "./archive-theme.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
