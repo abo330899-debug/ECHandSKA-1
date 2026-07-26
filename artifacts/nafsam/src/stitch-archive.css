@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+
+:root{
+  --stitch-bg:#050505;
+  --stitch-surface:#131313;
+  --stitch-panel:rgba(255,255,255,.035);
+  --stitch-panel-strong:rgba(255,255,255,.06);
+  --stitch-border:rgba(255,255,255,.08);
+  --stitch-primary:#a5e7ff;
+  --stitch-primary-strong:#00d2ff;
+  --stitch-gold:#e9c349;
+  --stitch-text:#e5e2e1;
+  --stitch-muted:#9cacb3;
+  --stitch-serif:'Playfair Display',serif;
+  --stitch-sans:'Geist','Cairo',sans-serif;
+}
+
+body{background:#050505;color:var(--stitch-text)}
+.app-shell::before{content:"";position:fixed;inset:-40%;z-index:-2;background:radial-gradient(circle at 25% 20%,rgba(0,210,255,.10),transparent 32%),radial-gradient(circle at 75% 75%,rgba(233,195,73,.07),transparent 34%);filter:blur(70px);animation:stitchAurora 28s linear infinite;pointer-events:none}
+.app-shell::after{content:"";position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(165,231,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(165,231,255,.035) 1px,transparent 1px),linear-gradient(to bottom,transparent 50%,rgba(165,231,255,.018) 50%);background-size:76px 76px,76px 76px,100% 4px;pointer-events:none}
+@keyframes stitchAurora{to{transform:rotate(360deg)}}
+
+.page-content{position:relative;z-index:2}
+.nav{background:linear-gradient(to bottom,rgba(5,5,5,.92),rgba(5,5,5,.58));border-color:rgba(165,231,255,.08);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+.brand,.links a.active,.links a:hover,.nav-logout:hover{color:var(--stitch-primary)}
+.links a:hover,.links a.active,.nav-logout:hover{border-color:rgba(165,231,255,.28);background:rgba(0,210,255,.06)}
+
+.stitch-shell{max-width:1440px;margin:0 auto;padding:72px 20px 110px;font-family:var(--stitch-sans)}
+.stitch-kicker{font-size:.72rem;text-transform:uppercase;letter-spacing:.18em;color:var(--stitch-primary);font-weight:700}
+.stitch-title{font-family:var(--stitch-serif);font-size:clamp(2.4rem,7vw,5.6rem);line-height:.98;letter-spacing:-.035em;color:var(--stitch-text);margin:10px 0 16px}
+.stitch-title span{color:var(--stitch-primary)}
+.stitch-lede{max-width:760px;color:var(--stitch-muted);font-size:clamp(.98rem,2vw,1.15rem);line-height:1.75}
+.stitch-rule{height:1px;background:linear-gradient(90deg,var(--stitch-primary),rgba(165,231,255,.08),transparent);margin:30px 0}
+.stitch-glass{background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.018));border:1px solid var(--stitch-border);box-shadow:0 24px 80px rgba(0,0,0,.34);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px)}
+
+.archive-cover{min-height:calc(100svh - 72px);display:grid;align-items:end;overflow:hidden;background:#060606}
+.archive-cover-photo{filter:brightness(.38) saturate(.72) contrast(1.05)}
+.archive-cover-shade{background:linear-gradient(180deg,rgba(5,5,5,.16),rgba(5,5,5,.5) 45%,#050505 100%)}
+.archive-cover-content{max-width:1320px;padding:clamp(110px,18vh,220px) 22px 68px;margin:0 auto;width:100%;text-align:left}
+[dir="rtl"] .archive-cover-content{text-align:right}
+.archive-volume{color:var(--stitch-primary);letter-spacing:.18em;text-transform:uppercase}
+.archive-title{font-family:var(--stitch-serif);font-size:clamp(3.5rem,12vw,9rem);line-height:.88;letter-spacing:-.055em;text-transform:uppercase;color:var(--stitch-text);text-shadow:0 0 45px rgba(0,210,255,.13)}
+.archive-time{justify-content:flex-start;border-top:1px solid rgba(165,231,255,.12);border-bottom:1px solid rgba(165,231,255,.12);padding:18px 0;max-width:760px}
+[dir="rtl"] .archive-time{justify-content:flex-end}
+.archive-time strong{color:var(--stitch-primary);font-family:var(--stitch-sans)}
+.archive-primary-link{background:var(--stitch-primary);color:#002632;border-radius:3px;text-transform:uppercase;letter-spacing:.12em;font-weight:700}
+.archive-text-link{color:var(--stitch-muted);text-transform:uppercase;letter-spacing:.12em}
+.archive-index{max-width:1320px}
+.archive-index-label{color:var(--stitch-primary);text-transform:uppercase;letter-spacing:.18em}
+.archive-chapters{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.archive-chapter{min-height:190px;border-radius:14px;background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.014));border:1px solid var(--stitch-border);box-shadow:0 24px 70px rgba(0,0,0,.3);overflow:hidden;transition:transform .35s,border-color .35s,box-shadow .35s}
+.archive-chapter:hover{transform:translateY(-6px);border-color:rgba(0,210,255,.38);box-shadow:0 0 35px rgba(0,210,255,.13),0 30px 80px rgba(0,0,0,.4)}
+.archive-chapter-number{color:rgba(165,231,255,.42);font-size:.8rem;letter-spacing:.2em}
+.archive-chapter-icon{color:var(--stitch-primary);background:rgba(0,210,255,.08);border-color:rgba(0,210,255,.18)}
+.archive-chapter-copy strong{font-family:var(--stitch-serif);font-size:clamp(1.6rem,3vw,2.4rem);color:var(--stitch-text)}
+.archive-chapter-copy small{color:var(--stitch-muted)}
+.archive-chapter-arrow{color:var(--stitch-primary)}
+
+.photos-luxe,.videos-page,.songs-archive,.journey-page,.writings-page,.feelings-page{max-width:1440px;margin:0 auto;padding-left:20px;padding-right:20px}
+.page-header{text-align:left;max-width:100%;padding-top:86px;padding-bottom:34px}
+[dir="rtl"] .page-header{text-align:right}
+.page-header h1{font-family:var(--stitch-serif);font-size:clamp(2.7rem,7vw,5.5rem);line-height:1;color:var(--stitch-text);letter-spacing:-.035em}
+.page-header h1::after{content:".";color:var(--stitch-primary)}
+.page-header p,.photos-header-sub{color:var(--stitch-muted);max-width:760px;font-family:var(--stitch-sans);font-size:1rem;line-height:1.75}
+
+.photo-grid,.album-grid{gap:22px;grid-template-columns:repeat(4,minmax(0,1fr))}
+.photo-card{border-radius:12px!important;background:var(--stitch-panel)!important;border-color:var(--stitch-border)!important;overflow:hidden;box-shadow:0 26px 70px rgba(0,0,0,.28);transition:transform .35s,border-color .35s,box-shadow .35s}
+.photo-card:hover{transform:translateY(-5px);border-color:rgba(0,210,255,.4)!important;box-shadow:0 0 30px rgba(0,210,255,.12),0 34px 80px rgba(0,0,0,.4)}
+.photo-card-media{aspect-ratio:4/3;background:#101010}
+.photo-img{filter:saturate(.82) contrast(1.05);transition:transform .7s,filter .5s}
+.photo-card:hover .photo-img{transform:scale(1.055);filter:saturate(1) contrast(1.08)}
+.photo-card-badge{background:rgba(5,5,5,.72);color:var(--stitch-primary);border:1px solid rgba(165,231,255,.2);font-family:var(--stitch-sans);letter-spacing:.12em}
+.photo-card-overlay{background:linear-gradient(transparent,rgba(5,5,5,.92))}
+.photo-card-overlay-title,.photo-card-overlay-text{font-family:var(--stitch-serif);color:var(--stitch-text)}
+.album-caption-block{border-top:1px solid var(--stitch-border);background:rgba(8,8,8,.76)}
+.album-caption-text{color:var(--stitch-muted)}
+.album-divider-text{color:var(--stitch-primary);letter-spacing:.18em;text-transform:uppercase}
+
+.songs-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;max-width:none!important}
+.song-card{padding:26px!important;border-radius:12px!important;background:var(--stitch-panel)!important;border-color:var(--stitch-border)!important;box-shadow:0 24px 70px rgba(0,0,0,.3)}
+.song-card h3{font-family:var(--stitch-serif);font-size:clamp(1.45rem,3vw,2rem);color:var(--stitch-text)}
+.song-card p{color:var(--stitch-muted)}
+.audio-player{filter:grayscale(1) invert(.85) hue-rotate(145deg);width:100%}
+
+.video-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.video-card{border-radius:12px!important;border:1px solid var(--stitch-border)!important;background:var(--stitch-panel)!important;box-shadow:0 24px 70px rgba(0,0,0,.3);overflow:hidden;transition:transform .35s,border-color .35s,box-shadow .35s}
+.video-card:hover{transform:translateY(-5px);border-color:rgba(0,210,255,.4)!important;box-shadow:0 0 30px rgba(0,210,255,.12),0 32px 80px rgba(0,0,0,.42)}
+.v-thumb{background:#0b0b0b}
+.v-play{background:rgba(5,5,5,.65);border:1px solid rgba(165,231,255,.32);color:var(--stitch-primary);box-shadow:0 0 30px rgba(0,210,255,.16)}
+
+.timeline,.writing-card,.feeling-card,.journey-card{border-color:var(--stitch-border)!important;background:var(--stitch-panel)!important;box-shadow:0 24px 70px rgba(0,0,0,.28)}
+
+@media(max-width:1050px){.photo-grid,.album-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.video-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.stitch-shell{padding-top:44px}.archive-cover-content{padding-bottom:44px}.archive-chapters{grid-template-columns:1fr}.archive-chapter{min-height:150px}.photo-grid,.album-grid,.video-grid,.songs-list{grid-template-columns:1fr!important}.page-header{padding-top:48px}.photo-card-media{aspect-ratio:4/3}.nav{background:rgba(5,5,5,.9)}}

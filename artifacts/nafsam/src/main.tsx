@@ -4,6 +4,9 @@ import App from "./App";
 import LoadingVeil from "./components/LoadingVeil";
 import "./index.css";
 import "./polished-overrides.css";
+import "./archive-theme.css";
+import "./media-gallery-theme.css";
+import "./stitch-archive.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
