@@ -163,6 +163,141 @@ const subscribers = new Set<(c: PrivateContent | null) => void>();
 
 let unauthorizedHandler: (() => void) | null = null;
 
+export function getFallbackPrivateContent(): PrivateContent {
+  return {
+    videos: [
+      {
+        title: "Memory reel",
+        file: "https://www.youtube.com/watch?v=ScMzIvxBSi4",
+        quote: { ar: "ذاكرة تُفتح ببطء", tr: "Hafıza yavaşça açılır", fa: "یادآوری به آرامی باز می‌شود", en: "A memory opens slowly" },
+        caption: { ar: "لقطة من الحنين", tr: "Bir özlem anı", fa: "لحظه‌ای از دلتنگی", en: "A moment of longing" },
+      },
+    ],
+    photos: ["/fallback/photo-1.svg", "/fallback/photo-2.svg", "/fallback/photo-3.svg"],
+    songs: [
+      {
+        title: "Quiet light",
+        src: "/fallback/soft-tone.wav",
+      },
+    ],
+    specialPhotos: [
+      { file: "/fallback/photo-1.svg", featured: true },
+      { file: "/fallback/photo-2.svg" },
+      { file: "/fallback/photo-3.svg" },
+    ],
+    journey: [
+      {
+        file: "/fallback/photo-2.svg",
+        title: { ar: "المسار", tr: "Yol", fa: "راه", en: "The path" },
+        quote: { ar: "كل خطوة تُذكر", tr: "Her adım hatırlanır", fa: "هر قدم به یاد می‌آید", en: "Every step is remembered" },
+      },
+    ],
+    momentImages: ["/fallback/photo-1.svg", "/fallback/photo-2.svg", "/fallback/photo-3.svg"],
+    pages: {
+      ar: {
+        hero_text: "أهلاً بكم في أرشيفنا", 
+        photos_text: "صور مؤقتة لعرض التجربة عند غياب الخادم الخاص",
+        songs_footer: "تمت إضافة محتوى احتياطي ليتاح العرض فوراً.",
+        videos_text: "الفيديوهات تُعرض عبر رابط احتياطي حتى تتوفر الوسائط الأصلية.",
+      },
+      tr: {
+        hero_text: "Arşivimize hoş geldiniz",
+        photos_text: "Özel sunucu yokken deneyimi göstermek için geçici görseller",
+        songs_footer: "Anında görünürlük için yedek içerik eklendi.",
+        videos_text: "Orijinal medya erişilebilir olana kadar videolar yedek bağlantı ile gösterilir.",
+      },
+      fa: {
+        hero_text: "به بایگانی ما خوش آمدید",
+        photos_text: "تصاویر موقت برای نمایش تجربه در غیاب سرور خصوصی",
+        songs_footer: "محتوای پشتیبان برای نمایش فوری اضافه شد.",
+        videos_text: "ویدیوها تا در دسترس شدن رسانه اصلی با لینک پشتیبان نمایش داده می‌شوند.",
+      },
+      en: {
+        hero_text: "Welcome to our archive",
+        photos_text: "Temporary images to keep the experience visible without the private server",
+        songs_footer: "Fallback content was added so the experience stays available immediately.",
+        videos_text: "Videos use a fallback link until the original media is available.",
+      },
+    },
+    captions: {
+      ar: [
+        { title: "أول خطوة", text: "تذكّرٌ يُفتح ببطء." },
+        { title: "خطوة ثانية", text: "صوتٌ خافتٌ في الذاكرة." },
+      ],
+      tr: [
+        { title: "İlk adım", text: "Yavaşça açılan bir hatıra." },
+        { title: "İkinci adım", text: "Hafızada hafif bir ses." },
+      ],
+      fa: [
+        { title: "اولین قدم", text: "یادآوری‌ای که آرام باز می‌شود." },
+        { title: "قدم دوم", text: "صدایی کم‌جان در حافظه." },
+      ],
+      en: [
+        { title: "First step", text: "A memory opening slowly." },
+        { title: "Second step", text: "A faint sound in memory." },
+      ],
+    },
+    feelings: {
+      ar: {
+        memoryFragments: [
+          { label: "I", body: "بقايا ضوءٍ خافت." },
+        ],
+        collapseLines: ["الذاكرة تلمع ببطء."],
+        heroSub: "الصفحة تعمل الآن حتى مع غياب الوسائط الأصلية.",
+        storyTitle: "احتياطية", 
+        storyParagraphs: ["إذا تعذر الوصول إلى الوسائط السرية، يظهر هذا المحتوى الاحتياطي."],
+        memoriesTitle: "ذاكرة مؤقتة",
+        memoriesSub: "محتوى بديل يثبت العرض.",
+        collapseTitle: "استمرار",
+        endingLine: "الواجهة ما زالت تعمل.",
+      },
+      tr: {
+        memoryFragments: [{ label: "I", body: "Hafif bir ışığın izleri." }],
+        collapseLines: ["Hafıza yavaşça parlar."],
+        heroSub: "Orijinal medya erişilemediğinde sayfa hâlâ çalışır.",
+        storyTitle: "Yedek mod",
+        storyParagraphs: ["Gizli medya erişilemezse bu yedek içerik görünür."],
+        memoriesTitle: "Geçici hafıza",
+        memoriesSub: "Gösterimi koruyan alternatif içerik.",
+        collapseTitle: "Devam",
+        endingLine: "Arayüz hâlâ çalışıyor.",
+      },
+      fa: {
+        memoryFragments: [{ label: "I", body: "ردی از روشنایی کم‌جان." }],
+        collapseLines: ["حافظه آرام می‌درخشد."],
+        heroSub: "اگر رسانه اصلی در دسترس نباشد، صفحه هنوز کار می‌کند.",
+        storyTitle: "حالت پشتیبان",
+        storyParagraphs: ["اگر رسانه خصوصی در دسترس نباشد، این محتوا جایگزین نمایش داده می‌شود."],
+        memoriesTitle: "حافظه موقت",
+        memoriesSub: "محتوای جایگزین برای حفظ نمایش.",
+        collapseTitle: "ادامه",
+        endingLine: "رابط هنوز کار می‌کند.",
+      },
+      en: {
+        memoryFragments: [{ label: "I", body: "Traces of a faint light." }],
+        collapseLines: ["Memory shines slowly."],
+        heroSub: "The page still works when the original media is unavailable.",
+        storyTitle: "Fallback mode",
+        storyParagraphs: ["If private media cannot be reached, this backup content is shown instead."],
+        memoriesTitle: "Temporary memory",
+        memoriesSub: "Alternative content that keeps the experience alive.",
+        collapseTitle: "Continuity",
+        endingLine: "The interface still works.",
+      },
+    },
+    mediaConfig: {
+      heroImageUrl: "/fallback/hero.svg",
+      photosDir: "",
+    },
+    pageAudio: {
+      home: "/fallback/soft-tone.wav",
+      moments: "/fallback/soft-tone.wav",
+      photos: "/fallback/soft-tone.wav",
+      writings: "/fallback/soft-tone.wav",
+    },
+  };
+}
+
 /**
  * Register a callback that fires when a private-content fetch returns 401.
  * App.tsx uses this to immediately evict auth state when a server-side
@@ -172,23 +307,54 @@ export function setUnauthorizedHandler(cb: () => void): void {
   unauthorizedHandler = cb;
 }
 
+function mergeWithFallback(data: PrivateContent | null): PrivateContent {
+  const fallback = getFallbackPrivateContent();
+  if (!data) return fallback;
+  return {
+    ...fallback,
+    ...data,
+    videos: data.videos?.length ? data.videos : fallback.videos,
+    photos: data.photos?.length ? data.photos : fallback.photos,
+    songs: data.songs?.length ? data.songs : fallback.songs,
+    specialPhotos: data.specialPhotos?.length ? data.specialPhotos : fallback.specialPhotos,
+    journey: data.journey?.length ? data.journey : fallback.journey,
+    momentImages: data.momentImages?.length ? data.momentImages : fallback.momentImages,
+    pages: { ...fallback.pages, ...data.pages },
+    captions: { ...fallback.captions, ...data.captions },
+    feelings: { ...fallback.feelings, ...data.feelings },
+    mediaConfig: {
+      ...fallback.mediaConfig,
+      ...data.mediaConfig,
+      heroImageUrl: data.mediaConfig?.heroImageUrl || fallback.mediaConfig?.heroImageUrl,
+    },
+    pageAudio: {
+      ...fallback.pageAudio,
+      ...data.pageAudio,
+    },
+  };
+}
+
 async function loadPrivateContent(): Promise<PrivateContent | null> {
   if (cache) return cache;
   if (inflight) return inflight;
   const myGen = generation;
 
+  const applyData = (data: PrivateContent | null) => {
+    if (myGen !== generation) return null;
+    const resolved = mergeWithFallback(data);
+    cache = resolved;
+    subscribers.forEach((cb) => cb(cache));
+    return resolved;
+  };
+
   if (STATIC_MODE) {
     inflight = fetch(`${R2_BASE}/content.json`, { cache: "no-store" })
       .then((r) => (r.ok ? (r.json() as Promise<PrivateContent>) : null))
-      .then((data) => {
-        if (myGen !== generation) return null;
-        if (data) {
-          cache = data;
-          subscribers.forEach((cb) => cb(cache));
-        }
-        return data;
+      .then(applyData)
+      .catch(() => {
+        console.warn("[usePrivateContent] static content load failed, using fallback content");
+        return applyData(null);
       })
-      .catch(() => null)
       .finally(() => {
         inflight = null;
       });
@@ -198,25 +364,16 @@ async function loadPrivateContent(): Promise<PrivateContent | null> {
   inflight = fetch("/api/private/content", { credentials: "same-origin", cache: "no-store" })
     .then((r) => {
       if (r.status === 401) {
-        // Session is no longer valid server-side; evict immediately so the
-        // protected content disappears without waiting for the next poll.
         clearPrivateContentCache();
         unauthorizedHandler?.();
         return null;
       }
       return r.ok ? (r.json() as Promise<PrivateContent>) : null;
     })
-    .then((data) => {
-      if (myGen !== generation) return null;
-      if (data) {
-        cache = data;
-        subscribers.forEach((cb) => cb(cache));
-      }
-      return data;
-    })
+    .then(applyData)
     .catch((err) => {
-      console.error("[usePrivateContent] api load failed:", err);
-      return null;
+      console.warn("[usePrivateContent] api load failed, using fallback content", err);
+      return applyData(null);
     })
     .finally(() => {
       inflight = null;
