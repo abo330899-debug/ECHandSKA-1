@@ -398,7 +398,13 @@ export default function Videos({ t, lang }: Props) {
   const activeCaption = active ? pickLocalized(active.caption, lang) : "";
   const activeQuote = active ? pickLocalized(active.quote, lang) : "";
 
-  const featured = videosData[0] ?? null;
+  const fallbackVideo = {
+    title: "Fallback memory",
+    file: "https://www.youtube.com/watch?v=ScMzIvxBSi4",
+    quote: { ar: "ذاكرة تُفتح ببطء", tr: "Hafıza yavaşça açılır", fa: "یادآوری به آرامی باز می‌شود", en: "A memory opens slowly" },
+    caption: { ar: "لقطة من الحنين", tr: "Bir özlem anı", fa: "لحظه‌ای از دلتنگی", en: "A moment of longing" },
+  };
+  const featured = videosData[0] ?? fallbackVideo;
   const featuredKind: VideoKind = featured ? detectKind(featured.file) : "mp4";
   const featuredCaption = featured ? pickLocalized(featured.caption, lang) : "";
   const featuredQuote = featured ? pickLocalized(featured.quote, lang) : "";

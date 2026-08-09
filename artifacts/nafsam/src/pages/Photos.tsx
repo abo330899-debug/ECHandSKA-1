@@ -253,22 +253,40 @@ export default function Photos({ t, lang }: Props) {
 
   const captions = data?.captions?.[lang] ?? data?.captions?.tr ?? [];
   const allPhotos = data?.photos ?? [];
+  const fallbackPhotos = ["/fallback/photo-1.svg", "/fallback/photo-2.svg", "/fallback/photo-3.svg"];
+  const resolvedPhotos = allPhotos.length > 0 ? allPhotos : fallbackPhotos;
 
   const rawSpecialPhotos = data?.specialPhotos ?? [];
   const nonFeaturedPhotos = rawSpecialPhotos.filter((ph) => !ph.featured);
   const featuredPhoto = rawSpecialPhotos.find((ph) => ph.featured);
 
-  const specialPhotos = nonFeaturedPhotos.map((ph, i) => ({
-    src: privateImage(ph.file),
-    thumb: privateImageThumb(ph.file),
-    text: p[SPECIAL_PHOTO_TEXT_KEYS[i]] ?? undefined,
-  }));
+  const specialPhotos = nonFeaturedPhotos.length > 0
+    ? nonFeaturedPhotos.map((ph, i) => ({
+        src: privateImage(ph.file),
+        thumb: privateImageThumb(ph.file),
+        text: p[SPECIAL_PHOTO_TEXT_KEYS[i]] ?? undefined,
+      }))
+    : fallbackPhotos.map((path, i) => ({
+        src: path,
+        thumb: path,
+        text: p[SPECIAL_PHOTO_TEXT_KEYS[i]] ?? undefined,
+      }));
 
-  const albumPhotos = allPhotos.map((name, i) => {
+  const albumPhotos = resolvedPhotos.map((name, i) => {
     const story = i < captions.length ? captions[i] : null;
+    const resolvedSrc = name.startsWith("/fallback/")
+      ? name
+      : photosDir
+        ? privateImage(`${photosDir}/${name}`)
+        : privateImage(name);
+    const resolvedThumb = name.startsWith("/fallback/")
+      ? name
+      : photosDir
+        ? privateImageThumb(`${photosDir}/${name}`)
+        : privateImageThumb(name);
     return {
-      src: photosDir ? privateImage(`${photosDir}/${name}`) : "",
-      thumb: photosDir ? privateImageThumb(`${photosDir}/${name}`) : "",
+      src: resolvedSrc,
+      thumb: resolvedThumb,
       title: story?.title ?? null,
       text: story?.text ?? t.photos_fallback_caption,
     };
